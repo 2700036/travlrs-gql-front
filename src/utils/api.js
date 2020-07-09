@@ -1,4 +1,4 @@
-import { renderLoading } from "../utils/utils.js";
+import { renderLoading } from "./utils.js";
 
 class Api {
   constructor({ address, token, groupId }) {
@@ -113,4 +113,6 @@ class Api {
   }
 }
 
-export default Api;
+const api = new Api()
+
+export default api;

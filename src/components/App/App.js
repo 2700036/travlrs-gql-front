@@ -5,38 +5,39 @@ import Footer from '../Footer/Footer';
 
 export default class App extends Component {
   state = {
-    isEditProfilePopupOpen: false,
+    popups: {isEditProfilePopupOpen: false,
     isAddPlacePopupOpen: false,
-    isEditAvatarPopupOpen: false,
+    isEditAvatarPopupOpen: false},
+    
   }
 
   handleEditAvatarClick = () => {
-    this.setState(({isEditAvatarPopupOpen})=>{
+    this.setState(({popups})=>{
       return {
-        isEditAvatarPopupOpen: !isEditAvatarPopupOpen
+        popups: {isEditAvatarPopupOpen: true}
       }
     })    
   }
   handleEditProfileClick = () => {
-    this.setState(({isEditProfilePopupOpen})=>{
+    this.setState(({popups})=>{
       return {
-        isEditAvatarPopupOpen: true
+        popups: {isEditAvatarPopupOpen: true}
       }
     })  
   }
   handleAddPlaceClick = () => {
-    this.setState(({isAddPlacePopupOpen})=>{
+    this.setState(({popups})=>{
       return {
-        isEditAvatarPopupOpen: true
+        popups: {isEditAvatarPopupOpen: true}
       }
     })  
   }
   closeAllPopups = () => {
-    this.setState((state)=>{
-      for (let key in state){
-        state[key] = false;
+    this.setState(({popups})=>{
+      for (let key in popups){
+        popups[key] = false;
       }
-      return state;
+      return {popups};
     })  
   }
   render() {
@@ -48,7 +49,7 @@ export default class App extends Component {
         onAddPlace={this.handleAddPlaceClick}
         onEditAvatar={this.handleEditAvatarClick}
         onClose={this.closeAllPopups}
-        openState={this.state}
+        openState={this.state.popups}
         />
         <Footer />
       </>
