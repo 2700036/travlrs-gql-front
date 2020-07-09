@@ -1,11 +1,43 @@
 import React, { Component } from 'react';
 import PopupWithForm from '../PopupWithForm/PopupWithForm';
 import ImagePopup from '../ImagePopup/ImagePopup';
+import Card from '../Card/Card';
+import api from '../../utils/api';
 
 class Main extends Component {
+  state = {    
+      userName: '', 
+      userDescription: '',
+      userAvatar: '',
+      cards: []    
+  }
+  componentDidMount() {
+    api.getUserInfo().then(res=>{
+      this.setState({
+        userName: res.name, 
+        userDescription: res.about,
+        userAvatar: res.avatar
+      })
+    });
+    api.getCardList().then(res=>{
+      this.setState(({cards})=>{
+        return {cards: res}
+      });      
+    });
+  }
+  
 
   render() {
     const {onEditProfile, onAddPlace, onEditAvatar, openState, onClose} = this.props;
+    const {userName, userDescription, userAvatar, cards} = this.state;
+
+    const cardsElems = cards.map((card, i)=>{
+      const {name} = card
+      return <Card cardInfo={card}
+      key={name+i}
+      />
+    });
+
     return (
       <>
       <main className="content">
@@ -13,15 +45,16 @@ class Main extends Component {
       <div 
       className="profile__image"
       onClick={onEditAvatar}
+      style={{backgroundImage: `url(${userAvatar})`}}
       ></div>
       <div className="profile__info">
-        <h1 className="profile__title">Жак-Ив Кусто</h1>
+        <h1 className="profile__title">{userName}</h1>
         <button 
         className="profile__edit-button" 
         type="button"
         onClick={onEditProfile}
         ></button>
-        <p className="profile__description">Исследователь океана</p>
+        <p className="profile__description">{userDescription}</p>
       </div>
       <button 
       className="profile__add-button" 
@@ -31,6 +64,7 @@ class Main extends Component {
     </section>
     <section className="places page__section">
       <ul className="places__list">
+        {cardsElems}
       </ul>
     </section>
   </main>

@@ -5,9 +5,10 @@ import Footer from '../Footer/Footer';
 
 export default class App extends Component {
   state = {
-    popups: {isEditProfilePopupOpen: false,
-    isAddPlacePopupOpen: false,
-    isEditAvatarPopupOpen: false},
+    popups: {
+      isEditProfilePopupOpen: false,
+      isAddPlacePopupOpen: false,
+      isEditAvatarPopupOpen: false},
     
   }
 
