@@ -131,7 +131,7 @@ class Main extends Component {
   title='Обновить аватар'
   name='edit-avatar'
   isOpen={openState.isEditAvatarPopupOpen}
-  
+  onClose={onClose}
   >
       <form className="popup__form" name="edit-avatar" noValidate>
         <label className="popup__label">

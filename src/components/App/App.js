@@ -23,14 +23,14 @@ export default class App extends Component {
   handleEditProfileClick = () => {
     this.setState(({popups})=>{
       return {
-        popups: {isEditAvatarPopupOpen: true}
+        popups: {isEditProfilePopupOpen: true}
       }
     })  
   }
   handleAddPlaceClick = () => {
     this.setState(({popups})=>{
       return {
-        popups: {isEditAvatarPopupOpen: true}
+        popups: {isAddPlacePopupOpen: true}
       }
     })  
   }
