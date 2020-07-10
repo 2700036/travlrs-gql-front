@@ -99,7 +99,7 @@ class Api {
   }
 
   changeLikeCardStatus(cardID, like) {
-    console.log(cardID, like);
+    
     // Обычная реализация: 2 разных метода для удаления и постановки лайка.
     return fetch(`${this._address}/${this._groupId}/cards/like/${cardID}`, {
       method: like ? 'PUT' : 'DELETE',

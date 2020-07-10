@@ -8,8 +8,9 @@ export default class App extends Component {
     popups: {
       isEditProfilePopupOpen: false,
       isAddPlacePopupOpen: false,
-      isEditAvatarPopupOpen: false},
-    
+      isEditAvatarPopupOpen: false
+    },
+      selectedCard: false,
   }
 
   handleEditAvatarClick = () => {
@@ -34,12 +35,15 @@ export default class App extends Component {
     })  
   }
   closeAllPopups = () => {
-    this.setState(({popups})=>{
+    this.setState(({popups})=>{      
       for (let key in popups){
         popups[key] = false;
-      }
-      return {popups};
+      };      
+      return {popups, selectedCard: false};
     })  
+  }
+  handleCardClick = (card) => {
+    this.setState({selectedCard: card});
   }
   render() {
     return (
@@ -51,6 +55,8 @@ export default class App extends Component {
         onEditAvatar={this.handleEditAvatarClick}
         onClose={this.closeAllPopups}
         openState={this.state.popups}
+        handleCardClick={this.handleCardClick}
+        card={this.state.selectedCard}
         />
         <Footer />
       </>

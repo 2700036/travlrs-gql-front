@@ -21,6 +21,7 @@ class Main extends Component {
     });
     api.getCardList().then(res=>{
       this.setState(({cards})=>{
+
         return {cards: res}
       });      
     });
@@ -28,13 +29,15 @@ class Main extends Component {
   
 
   render() {
-    const {onEditProfile, onAddPlace, onEditAvatar, openState, onClose} = this.props;
+    const {onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card, handleCardClick} = this.props;
     const {userName, userDescription, userAvatar, cards} = this.state;
 
-    const cardsElems = cards.map((card, i)=>{
-      const {name} = card
-      return <Card cardInfo={card}
-      key={name+i}
+    const cardsElems = cards.map((card)=>{     
+      const {_id} = card
+      return <Card 
+      cardInfo={card}
+      onCardClick={()=>handleCardClick(card)}
+      key={_id}
       />
     });
 
@@ -128,7 +131,7 @@ class Main extends Component {
   title='Обновить аватар'
   name='edit-avatar'
   isOpen={openState.isEditAvatarPopupOpen}
-  onClose={onClose}
+  
   >
       <form className="popup__form" name="edit-avatar" noValidate>
         <label className="popup__label">
@@ -140,7 +143,11 @@ class Main extends Component {
         <button type="submit" className="button popup__button">Сохранить</button>
       </form>
   </PopupWithForm>
-  <ImagePopup />    
+  <ImagePopup 
+  card={card}
+  onClose={onClose}
+
+  />    
   
   </>
     );

@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Card = ({cardInfo: {name, link, likes}}) => {  
+const Card = ({cardInfo: {name, link, likes}, onCardClick}) => {  
   
   return (
-  <li className="places__item card">
+  <li onClick={onCardClick} className="places__item card">
     <div className="card__image" style={{backgroundImage: `url(${link})`}}>
     </div>
     <button type="button" className="card__delete-button"></button>    
