@@ -1,65 +1,49 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
 
-export default class App extends Component {
-  state = {
-    popups: {
-      isEditProfilePopupOpen: false,
-      isAddPlacePopupOpen: false,
-      isEditAvatarPopupOpen: false
-    },
-      selectedCard: false,
+const App = () => {
+  const [popups, setPopups] = React.useState({
+    isEditProfilePopupOpen: false,
+    isAddPlacePopupOpen: false,
+    isEditAvatarPopupOpen: false
+  })
+  const [selectedCard, setSelectedCard] = React.useState(false)
+  
+  const handleEditAvatarClick = () => {
+    setPopups({isEditAvatarPopupOpen: true})    
   }
-
-  handleEditAvatarClick = () => {
-    this.setState(({popups})=>{
-      return {
-        popups: {isEditAvatarPopupOpen: true}
-      }
-    })    
+  const handleEditProfileClick = () => {
+    setPopups({isEditProfilePopupOpen: true})
   }
-  handleEditProfileClick = () => {
-    this.setState(({popups})=>{
-      return {
-        popups: {isEditProfilePopupOpen: true}
-      }
-    })  
+  const handleAddPlaceClick = () => {
+    setPopups({isAddPlacePopupOpen: true})
   }
-  handleAddPlaceClick = () => {
-    this.setState(({popups})=>{
-      return {
-        popups: {isAddPlacePopupOpen: true}
-      }
-    })  
-  }
-  closeAllPopups = () => {
-    this.setState(({popups})=>{      
-      for (let key in popups){
-        popups[key] = false;
-      };      
-      return {popups, selectedCard: false};
-    })  
-  }
-  handleCardClick = (card) => {
-    this.setState({selectedCard: card});
-  }
-  render() {
+  const closeAllPopups = () => {
+    setPopups({isEditAvatarPopupOpen: false, isEditProfilePopupOpen: false, isAddPlacePopupOpen: false});
+    setSelectedCard(false)  
+    }
+  
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
+  }  
     return (
       <>
         <Header />
         <Main 
-        onEditProfile={this.handleEditProfileClick}
-        onAddPlace={this.handleAddPlaceClick}
-        onEditAvatar={this.handleEditAvatarClick}
-        onClose={this.closeAllPopups}
-        openState={this.state.popups}
-        handleCardClick={this.handleCardClick}
-        card={this.state.selectedCard}
+        onEditProfile={handleEditProfileClick}
+        onAddPlace={handleAddPlaceClick}
+        onEditAvatar={handleEditAvatarClick}
+        onClose={closeAllPopups}
+        openState={popups}
+        handleCardClick={handleCardClick}
+        card={selectedCard}
         />
         <Footer />
       </>
     );
-  }
+  
 }
+
+export default App;
