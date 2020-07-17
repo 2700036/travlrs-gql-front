@@ -3,6 +3,9 @@ import PopupWithForm from '../PopupWithForm/PopupWithForm';
 import ImagePopup from '../ImagePopup/ImagePopup';
 import Card from '../Card/Card';
 import api from '../../utils/api';
+import EditForm from '../EditForm/EditForm';
+import PlaceForm from '../PlaceForm/PlaceForm';
+
 
 const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card, handleCardClick}) => {
   const [userInfo, setUserInfo] = React.useState({    
@@ -21,20 +24,28 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
         userAvatar: res[0].avatar,        
       });
       setCards(res[1]);
+     
     })
     .catch(err =>{
       console.log(err)
     })
   }, [])  
+
+  let curId = 100;
+
   
   const cardsElems = cards.map((card)=>{     
     const {_id} = card
     return <Card 
     cardInfo={card}
     onCardClick={()=>handleCardClick(card)}
-    key={_id}
+    key={card.name+curId++}
     />
   });
+
+  const onAddCardSubmit = ({name, link}) => {    
+    setCards([...cards, {name, link}])
+  }
 
   const {userName, userDescription, userAvatar} = userInfo;
   
@@ -75,21 +86,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   onClose={onClose}
   
   >
-  <form className="popup__form" name="edit" noValidate>
-      <label className="popup__label">
-        <input type="text" name="userName" id="owner-name"
-               className="popup__input popup__input_type_name" placeholder="Имя"
-               required minLength="2" maxLength="40" pattern="[a-zA-Zа-яА-Я -]{1,}"/>
-        <span className="popup__error" id="owner-name-error"></span>
-      </label>
-      <label className="popup__label">
-        <input type="text" name="userDescription" id="owner-description"
-               className="popup__input popup__input_type_description" placeholder="Занятие"
-               required minLength="2" maxLength="200"/>
-        <span className="popup__error" id="owner-description-error"></span>
-      </label>
-      <button type="submit" className="button popup__button">Сохранить</button>
-    </form>
+  <EditForm />
   </PopupWithForm>
   
   <PopupWithForm
@@ -98,21 +95,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   isOpen={openState.isAddPlacePopupOpen}
   onClose={onClose}
   >
-      <form className="popup__form" name="new-card" noValidate>
-        <label className="popup__label">
-          <input type="text" name="name" id="place-name"
-                 className="popup__input popup__input_type_card-name" placeholder="Название"
-                 required minLength="1" maxLength="30"/>
-          <span className="popup__error" id="place-name-error"></span>
-        </label>
-        <label className="popup__label">
-          <input type="url" name="link" id="place-link"
-                 className="popup__input popup__input_type_url" placeholder="Ссылка на картинку"
-                 required/>
-          <span className="popup__error" id="place-link-error"></span>
-        </label>
-        <button type="submit" className="button popup__button popup__button_disabled">Сохранить</button>
-      </form>
+  <PlaceForm onAddCardSubmit={onAddCardSubmit}/>    
   </PopupWithForm>
 
   <PopupWithForm

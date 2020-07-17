@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Card = ({cardInfo: {name, link, likes}, onCardClick}) => {  
+const Card = ({cardInfo: {name, link, likes = 0}, onCardClick}) => {  
   
   return (
   <li onClick={onCardClick} className="places__item card">
@@ -13,7 +13,7 @@ const Card = ({cardInfo: {name, link, likes}, onCardClick}) => {
       </h2>
       <div className="card__likes">
         <button type="button" className="card__like-button"></button>
-  <p className="card__like-count">{likes.length}</p>
+  <p className="card__like-count">{likes.length || 0}</p>
       </div>
     </div>
   </li>
