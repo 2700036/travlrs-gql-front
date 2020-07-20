@@ -7,21 +7,24 @@ import EditForm from '../EditForm/EditForm';
 import PlaceForm from '../PlaceForm/PlaceForm';
 
 
-const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card, handleCardClick}) => {
+const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card, handleCardClick, handleBasketIconClick}) => {
   const [userInfo, setUserInfo] = React.useState({    
     userName: '', 
     userDescription: '',
-    userAvatar: ''        
+    userAvatar: '',
+    userId: ''        
   });
+  const {userName, userDescription, userAvatar, userId} = userInfo;
 
   const [cards, setCards] = React.useState([]);
   React.useEffect(()=>{
     Promise.all([api.getUserInfo(), api.getCardList()])
-    .then(res =>{ 
+    .then(res =>{       
       setUserInfo({
         userName: res[0].name, 
         userDescription: res[0].about,
-        userAvatar: res[0].avatar,        
+        userAvatar: res[0].avatar,
+        userId: res[0]._id         
       });
       setCards(res[1]);
      
@@ -29,25 +32,61 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
     .catch(err =>{
       console.log(err)
     })
-  }, [])  
-
-  let curId = 100;
-
+  }, []) 
   
-  const cardsElems = cards.map((card)=>{     
-    const {_id} = card
+  const onDeleteCardSubmit = (e)=>{
+    e.preventDefault();
+    // console.log(card)
+    api.removeCard(card._id)
+    .then((res)=>{
+      if(res.message){      
+      const ind = cards.findIndex(el=>el._id === card._id);
+      setCards([...cards.slice(0, ind), ...cards.slice(ind+1)]);
+      onClose(); 
+      } else {
+        console.log(res);
+      }   
+    }
+    )
+    .catch(err=>{console.log(err);})
+  }
+  const onLikeButton = (cardId, isliked) => {
+    if(isliked){
+      console.log('снимаем');
+    } else {
+      console.log('ставим');
+    }
+  }
+  
+  const onAddCardSubmit = ({name, link}) => {
+    api.addCard({name, link})
+    .then(card=>{
+      setCards([...cards, card]);
+      onClose();
+    })    
+    
+  }
+  
+  const cardsElems = cards.map((card)=>{  
+    const isLiked = card.likes.some(({_id})=>userId===_id);
+    
+    
     return <Card 
     cardInfo={card}
-    onCardClick={()=>handleCardClick(card)}
-    key={card.name+curId++}
+    onCardClick={(e)=>{
+      e.stopPropagation();
+      handleCardClick(card)}}
+    onBasketClick={(e)=>{
+      e.stopPropagation();
+      handleBasketIconClick(card)
+    }}
+    key={card._id}
+    onLikeButton={onLikeButton}
+    isUsersCard={userId===card.owner._id}
+    isLiked={}
     />
   });
-
-  const onAddCardSubmit = ({name, link}) => {    
-    setCards([...cards, {name, link}])
-  }
-
-  const {userName, userDescription, userAvatar} = userInfo;
+  
   
     return (
       <>
@@ -100,10 +139,14 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
 
   <PopupWithForm
   title='Вы уверены?'
-  name='remove-card'  
+  name='remove-card'
+  isOpen={openState.isDeleteCardPopupOpened} 
+  onClose={onClose} 
   >
       <form className="popup__form" name="remove-card" noValidate>
-        <button type="submit" className="button popup__button">Да</button>
+        <button type="submit" className="button popup__button"
+        onClick={onDeleteCardSubmit}
+        >Да</button>
       </form>
   </PopupWithForm>
 
@@ -125,6 +168,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   </PopupWithForm>
   <ImagePopup 
   card={card}
+  isOpen={openState.isPhotoPreviewPopupOpened}
   onClose={onClose}
   />    
   

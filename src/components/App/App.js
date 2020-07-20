@@ -7,7 +7,9 @@ const App = () => {
   const [popups, setPopups] = React.useState({
     isEditProfilePopupOpen: false,
     isAddPlacePopupOpen: false,
-    isEditAvatarPopupOpen: false
+    isEditAvatarPopupOpen: false,
+    isPhotoPreviewPopupOpened: false,
+    isDeleteCardPopupOpened: false
   })
   const [selectedCard, setSelectedCard] = React.useState(false)
   
@@ -20,13 +22,18 @@ const App = () => {
   const handleAddPlaceClick = () => {
     setPopups({isAddPlacePopupOpen: true})
   }
+  const handleBasketIconClick = (card) => {
+    setSelectedCard(card);
+    setPopups({isDeleteCardPopupOpened: true})
+  }
   const closeAllPopups = () => {
     setPopups({isEditAvatarPopupOpen: false, isEditProfilePopupOpen: false, isAddPlacePopupOpen: false});
     setSelectedCard(false)  
     }
   
-  const handleCardClick = (card) => {
+  const handleCardClick = (card) => {    
     setSelectedCard(card);
+    setPopups({isPhotoPreviewPopupOpened: true})
   }  
     return (
       <>
@@ -38,6 +45,7 @@ const App = () => {
         onClose={closeAllPopups}
         openState={popups}
         handleCardClick={handleCardClick}
+        handleBasketIconClick={handleBasketIconClick}
         card={selectedCard}
         />
         <Footer />

@@ -25,7 +25,7 @@ class Api {
   }
 
   addCard({ name, link }) {
-    renderLoading(true);
+    // renderLoading(true);
 
     return fetch(`${this._address}/${this._groupId}/cards`, {
       method: 'POST',
@@ -38,7 +38,7 @@ class Api {
         link
       })
     })
-      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))      
       .catch(err => console.log(`Добавление карточки: ${err}`));
   }
 
