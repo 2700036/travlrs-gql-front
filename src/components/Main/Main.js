@@ -50,22 +50,15 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
     )
     .catch(err=>{console.log(err);})
   }
-  const onLikeButton = (cardId, isliked) => {
-    if(isliked){
-      console.log('снимаем');
-    } else {
-      console.log('ставим');
-    }
-  }
   
   const onAddCardSubmit = ({name, link}) => {
     api.addCard({name, link})
     .then(card=>{
       setCards([...cards, card]);
       onClose();
-    })    
-    
+    }) 
   }
+
   
   const cardsElems = cards.map((card)=>{  
     const isLiked = card.likes.some(({_id})=>userId===_id);
@@ -80,10 +73,9 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
       e.stopPropagation();
       handleBasketIconClick(card)
     }}
-    key={card._id}
-    onLikeButton={onLikeButton}
+    key={card._id}    
     isUsersCard={userId===card.owner._id}
-    isLiked={}
+    isInitialLiked={isLiked}
     />
   });
   

@@ -1,9 +1,19 @@
 import React from 'react';
+import api from '../../utils/api';
 
-const Card = ({cardInfo: {name, link, likes, _id}, onCardClick, onBasketClick, onLikeButton, isUsersCard, isLiked}) => {
-  // const [isLiked, setIsLiked] = React.useState(false)  
-  const classNames = isLiked ? 'card__like-button card__like-button_is-active' : 'card__like-button';
+const Card = ({cardInfo: {name, link, likes, _id}, onCardClick, onBasketClick, isUsersCard, isInitialLiked}) => {
+  const [isLiked, setIsLiked] = React.useState(isInitialLiked)
+  const [likesLength, setLikesLength] = React.useState(likes.length)  
+
+  const handleLike = (cardId, like) => {
+    api.changeLikeCardStatus(cardId, like)
+    .then(res=>{      
+      setLikesLength(res.likes.length);
+      setIsLiked(!isLiked);      
+    })    
+    }  
   
+  const classNames = isLiked ? 'card__like-button card__like-button_is-active' : 'card__like-button';
   return (
   <li onClick={onCardClick} className="places__item card">
     <div className="card__image" style={{backgroundImage: `url(${link})`}}>
@@ -20,9 +30,9 @@ const Card = ({cardInfo: {name, link, likes, _id}, onCardClick, onBasketClick, o
         className={classNames}
         onClick={(e)=>{
           e.stopPropagation();
-          onLikeButton(isLiked)}}
+          handleLike(_id, !isLiked)}}
         ></button>
-  <p className="card__like-count">{likes.length || 0}</p>
+  <p className="card__like-count">{likesLength || 0}</p>
       </div>
     </div>
   </li>

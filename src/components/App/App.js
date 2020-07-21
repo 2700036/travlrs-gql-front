@@ -29,8 +29,7 @@ const App = () => {
   const closeAllPopups = () => {
     setPopups({isEditAvatarPopupOpen: false, isEditProfilePopupOpen: false, isAddPlacePopupOpen: false});
     setSelectedCard(false)  
-    }
-  
+    }  
   const handleCardClick = (card) => {    
     setSelectedCard(card);
     setPopups({isPhotoPreviewPopupOpened: true})
