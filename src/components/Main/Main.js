@@ -19,20 +19,21 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   const [cards, setCards] = React.useState([]);
   React.useEffect(()=>{
     Promise.all([api.getUserInfo(), api.getCardList()])
-    .then(res =>{       
+    .then(res =>{ 
+      const [{name, about, avatar, _id}, cards] = res;      
       setUserInfo({
-        userName: res[0].name, 
-        userDescription: res[0].about,
-        userAvatar: res[0].avatar,
-        userId: res[0]._id         
+        userName: name, 
+        userDescription: about,
+        userAvatar: avatar,
+        userId: _id         
       });
-      setCards(res[1]);
+      setCards(cards);
      
     })
     .catch(err =>{
       console.log(err)
     })
-  }, []) 
+  }) 
   
   const onDeleteCardSubmit = (e)=>{
     e.preventDefault();
@@ -117,7 +118,9 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   onClose={onClose}
   
   >
-  <EditForm />
+  <EditForm 
+  initialUserInfo={userInfo}
+  />
   </PopupWithForm>
   
   <PopupWithForm
