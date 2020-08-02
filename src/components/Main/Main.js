@@ -19,37 +19,40 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   const [cards, setCards] = React.useState([]);
   React.useEffect(()=>{
     Promise.all([api.getUserInfo(), api.getCardList()])
-    .then(res =>{ 
-      const [{name, about, avatar, _id}, cards] = res;      
+    .then(res =>{  
+      const [{name, about, avatar, _id}, cardsData] = res;   
       setUserInfo({
         userName: name, 
         userDescription: about,
         userAvatar: avatar,
         userId: _id         
       });
-      setCards(cards);
+      setCards(cardsData);
      
     })
     .catch(err =>{
       console.log(err)
     })
-  }) 
+  }, []) 
   
   const onDeleteCardSubmit = (e)=>{
     e.preventDefault();
     // console.log(card)
     api.removeCard(card._id)
-    .then((res)=>{
-      if(res.message){      
+    .then((res)=>{           
       const ind = cards.findIndex(el=>el._id === card._id);
       setCards([...cards.slice(0, ind), ...cards.slice(ind+1)]);
       onClose(); 
-      } else {
-        console.log(res);
-      }   
     }
     )
     .catch(err=>{console.log(err);})
+  }
+  const onLikeButton = (cardId, isliked) => {
+    if(isliked){
+      console.log('снимаем');
+    } else {
+      console.log('ставим');
+    }
   }
   
   const onAddCardSubmit = ({name, link}) => {
@@ -57,9 +60,9 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
     .then(card=>{
       setCards([...cards, card]);
       onClose();
-    }) 
+    })    
+    
   }
-
   
   const cardsElems = cards.map((card)=>{  
     const isLiked = card.likes.some(({_id})=>userId===_id);
@@ -74,7 +77,8 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
       e.stopPropagation();
       handleBasketIconClick(card)
     }}
-    key={card._id}    
+    key={card._id}
+    onLikeButton={onLikeButton}
     isUsersCard={userId===card.owner._id}
     isInitialLiked={isLiked}
     />
