@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 
 class ImagePopup extends Component {
   render() {
-    const {card, isOpen, onClose} = this.props;
-    
-    const classNames = () => {
-    return isOpen ? `popup popup_type_image popup_is-opened` : `popup popup_type_image`
-  }
+    const {card, onClose} = this.props;
+   
     
     return (
       <>
-        <div className={classNames()}>
+        <div className='popup popup_type_image popup_is-opened'>
           <div className='popup__content popup__content_content_image'>
             <button 
             type='button' 

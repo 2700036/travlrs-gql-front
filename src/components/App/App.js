@@ -29,11 +29,7 @@ const App = () => {
   const closeAllPopups = () => {
     setPopups({isEditAvatarPopupOpen: false, isEditProfilePopupOpen: false, isAddPlacePopupOpen: false});
     setSelectedCard(false)  
-    }  
-  const handleCardClick = (card) => {    
-    setSelectedCard(card);
-    setPopups({isPhotoPreviewPopupOpened: true})
-  }  
+    }    
     return (
       <>
         <Header />
@@ -42,10 +38,9 @@ const App = () => {
         onAddPlace={handleAddPlaceClick}
         onEditAvatar={handleEditAvatarClick}
         onClose={closeAllPopups}
-        openState={popups}
-        handleCardClick={handleCardClick}
+        openState={popups}        
         handleBasketIconClick={handleBasketIconClick}
-        card={selectedCard}
+        selectedCard={selectedCard}
         />
         <Footer />
       </>

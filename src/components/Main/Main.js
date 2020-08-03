@@ -5,9 +5,11 @@ import Card from '../Card/Card';
 import api from '../../utils/api';
 import EditForm from '../EditForm/EditForm';
 import PlaceForm from '../PlaceForm/PlaceForm';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 
-const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card, handleCardClick, handleBasketIconClick}) => {
+
+const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, selectedCard, handleBasketIconClick}) => {
   const [userInfo, setUserInfo] = React.useState({    
     userName: '', 
     userDescription: '',
@@ -19,8 +21,9 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   const [cards, setCards] = React.useState([]);
   React.useEffect(()=>{
     Promise.all([api.getUserInfo(), api.getCardList()])
-    .then(res =>{  
-      const [{name, about, avatar, _id}, cardsData] = res;   
+    .then(res =>{        
+      const [{name, about, avatar, _id}, cardsData] = res;  
+      console.log(cardsData); 
       setUserInfo({
         userName: name, 
         userDescription: about,
@@ -37,10 +40,9 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   
   const onDeleteCardSubmit = (e)=>{
     e.preventDefault();
-    // console.log(card)
-    api.removeCard(card._id)
+    api.removeCard(selectedCard._id)
     .then((res)=>{           
-      const ind = cards.findIndex(el=>el._id === card._id);
+      const ind = cards.findIndex(el=>el._id === selectedCard._id);
       setCards([...cards.slice(0, ind), ...cards.slice(ind+1)]);
       onClose(); 
     }
@@ -66,13 +68,8 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   
   const cardsElems = cards.map((card)=>{  
     const isLiked = card.likes.some(({_id})=>userId===_id);
-    
-    
     return <Card 
     cardInfo={card}
-    onCardClick={(e)=>{
-      e.stopPropagation();
-      handleCardClick(card)}}
     onBasketClick={(e)=>{
       e.stopPropagation();
       handleBasketIconClick(card)
@@ -86,7 +83,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   
   
     return (
-      <>
+      <Router>
       <main className="content">
     <section className="profile page__section">
       <div 
@@ -122,9 +119,9 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
   onClose={onClose}
   
   >
-  <EditForm 
+  {userInfo.userName && <EditForm 
   initialUserInfo={userInfo}
-  />
+  />}
   </PopupWithForm>
   
   <PopupWithForm
@@ -165,13 +162,19 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, card
         <button type="submit" className="button popup__button">Сохранить</button>
       </form>
   </PopupWithForm>
-  <ImagePopup 
-  card={card}
-  isOpen={openState.isPhotoPreviewPopupOpened}
-  onClose={onClose}
-  />    
+  <Route path='/places/:id' render={({match, history})=>{
+    const id = match.params.id;
+    const currentCard = cards.find(({_id})=>id === _id)
+    return (currentCard &&
+      <ImagePopup 
+  card={currentCard}  
+  onClose={()=>history.goBack()}
+  />  
+    )
+  }} />
+    
   
-  </>
+  </Router>
     );
   
 }
