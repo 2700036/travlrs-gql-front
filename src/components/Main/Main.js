@@ -10,6 +10,9 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 
 const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, selectedCard, handleBasketIconClick}) => {
+  const {isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, 
+    isDeleteCardPopupOpened} = openState
+  
   const [userInfo, setUserInfo] = React.useState({    
     userName: '', 
     userDescription: '',
@@ -112,7 +115,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, sele
       </ul>
     </section>
   </main>
-  <PopupWithForm
+  {isEditProfilePopupOpen && <PopupWithForm
   title='Редактировать профиль'
   name='edit'
   isOpen={openState.isEditProfilePopupOpen}
@@ -123,8 +126,8 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, sele
   initialUserInfo={userInfo}
   />}
   </PopupWithForm>
-  
-  <PopupWithForm
+}
+  {isAddPlacePopupOpen && <PopupWithForm
   title='Новое место'
   name='new-card'
   isOpen={openState.isAddPlacePopupOpen}
@@ -132,8 +135,8 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, sele
   >
   <PlaceForm onAddCardSubmit={onAddCardSubmit}/>    
   </PopupWithForm>
-
-  <PopupWithForm
+}
+{isDeleteCardPopupOpened && <PopupWithForm
   title='Вы уверены?'
   name='remove-card'
   isOpen={openState.isDeleteCardPopupOpened} 
@@ -145,8 +148,8 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, sele
         >Да</button>
       </form>
   </PopupWithForm>
-
-  <PopupWithForm
+}
+{isEditAvatarPopupOpen && <PopupWithForm
   title='Обновить аватар'
   name='edit-avatar'
   isOpen={openState.isEditAvatarPopupOpen}
@@ -162,6 +165,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, sele
         <button type="submit" className="button popup__button">Сохранить</button>
       </form>
   </PopupWithForm>
+}
   <Route path='/places/:id' render={({match, history})=>{
     const id = match.params.id;
     const currentCard = cards.find(({_id})=>id === _id)

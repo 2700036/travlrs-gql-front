@@ -14,7 +14,9 @@ const App = () => {
   const [selectedCard, setSelectedCard] = React.useState(false)
   
   const handleEditAvatarClick = () => {
-    setPopups({isEditAvatarPopupOpen: true})    
+    setPopups((popups)=>{
+      return {...popups, isEditAvatarPopupOpen: true}  
+    })    
   }
   const handleEditProfileClick = () => {
     setPopups({isEditProfilePopupOpen: true})
