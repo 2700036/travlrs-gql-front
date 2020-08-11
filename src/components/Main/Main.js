@@ -9,9 +9,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 
 
-const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, selectedCard, handleBasketIconClick}) => {
-  const {isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, 
-    isDeleteCardPopupOpened} = openState
+const Main = ({onEditProfile, onAddPlace, onEditAvatar, openedPopup, onClose, selectedCard, handleBasketIconClick}) => {
+  
   
   const [userInfo, setUserInfo] = React.useState({    
     userName: '', 
@@ -115,10 +114,10 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, sele
       </ul>
     </section>
   </main>
-  {isEditProfilePopupOpen && <PopupWithForm
+  {openedPopup.isEditProfilePopupOpen && <PopupWithForm
   title='Редактировать профиль'
   name='edit'
-  isOpen={openState.isEditProfilePopupOpen}
+  
   onClose={onClose}
   
   >
@@ -127,19 +126,19 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, sele
   />}
   </PopupWithForm>
 }
-  {isAddPlacePopupOpen && <PopupWithForm
+  {openedPopup.isAddPlacePopupOpen && <PopupWithForm
   title='Новое место'
   name='new-card'
-  isOpen={openState.isAddPlacePopupOpen}
+  
   onClose={onClose}
   >
   <PlaceForm onAddCardSubmit={onAddCardSubmit}/>    
   </PopupWithForm>
 }
-{isDeleteCardPopupOpened && <PopupWithForm
+{openedPopup.isDeleteCardPopupOpened && <PopupWithForm
   title='Вы уверены?'
   name='remove-card'
-  isOpen={openState.isDeleteCardPopupOpened} 
+  
   onClose={onClose} 
   >
       <form className="popup__form" name="remove-card" noValidate>
@@ -149,10 +148,10 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, openState, onClose, sele
       </form>
   </PopupWithForm>
 }
-{isEditAvatarPopupOpen && <PopupWithForm
+{openedPopup.isEditAvatarPopupOpen && <PopupWithForm
   title='Обновить аватар'
   name='edit-avatar'
-  isOpen={openState.isEditAvatarPopupOpen}
+  
   onClose={onClose}
   >
       <form className="popup__form" name="edit-avatar" noValidate>

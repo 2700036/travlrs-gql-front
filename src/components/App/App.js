@@ -4,32 +4,24 @@ import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
 
 const App = () => {
-  const [popups, setPopups] = React.useState({
-    isEditProfilePopupOpen: false,
-    isAddPlacePopupOpen: false,
-    isEditAvatarPopupOpen: false,
-    isPhotoPreviewPopupOpened: false,
-    isDeleteCardPopupOpened: false
-  })
+  const [openedPopup, setOpenedPopup] = React.useState({})
   const [selectedCard, setSelectedCard] = React.useState(false)
   
   const handleEditAvatarClick = () => {
-    setPopups((popups)=>{
-      return {...popups, isEditAvatarPopupOpen: true}  
-    })    
+    setOpenedPopup({isEditAvatarPopupOpen: true})         
   }
   const handleEditProfileClick = () => {
-    setPopups({isEditProfilePopupOpen: true})
+    setOpenedPopup({isEditProfilePopupOpen: true})
   }
   const handleAddPlaceClick = () => {
-    setPopups({isAddPlacePopupOpen: true})
+    setOpenedPopup({isAddPlacePopupOpen: true})
   }
   const handleBasketIconClick = (card) => {
     setSelectedCard(card);
-    setPopups({isDeleteCardPopupOpened: true})
+    setOpenedPopup({isDeleteCardPopupOpened: true})
   }
   const closeAllPopups = () => {
-    setPopups({isEditAvatarPopupOpen: false, isEditProfilePopupOpen: false, isAddPlacePopupOpen: false});
+    setOpenedPopup({});
     setSelectedCard(false)  
     }    
     return (
@@ -40,7 +32,7 @@ const App = () => {
         onAddPlace={handleAddPlaceClick}
         onEditAvatar={handleEditAvatarClick}
         onClose={closeAllPopups}
-        openState={popups}        
+        openedPopup={openedPopup}        
         handleBasketIconClick={handleBasketIconClick}
         selectedCard={selectedCard}
         />
