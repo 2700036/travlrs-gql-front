@@ -6,19 +6,18 @@ const PopupWithForm = ({ title, name, onClose, children }) => {
     popup.current.classList.remove('popup_is-opened');
     popup.current.addEventListener('transitionend', onClose, true)
   }, [onClose])
-
-  const escFunction = useCallback(({keyCode}) => {
-    if(keyCode === 27) {
-      smoothClose();
-    }
-  }, [smoothClose]);
-  const hadleOverlayClick = useCallback(({target})=>{
-    if(target.classList.contains('popup')){
-      smoothClose();
-    }
-  }, [smoothClose])
-
+  
   useEffect(() => {
+    const escFunction = ({keyCode}) => {
+      if(keyCode === 27) {
+        smoothClose();
+      }
+    }
+    const hadleOverlayClick = ({target})=>{
+      if(target.classList.contains('popup')){
+        smoothClose();
+      }
+    }
     popup.current.classList.add('popup_is-opened')
     document.addEventListener("keydown", escFunction);
     document.addEventListener("click", hadleOverlayClick);
@@ -27,7 +26,7 @@ const PopupWithForm = ({ title, name, onClose, children }) => {
       document.removeEventListener("click", hadleOverlayClick);
       
     };
-  }, [escFunction, hadleOverlayClick, onClose]);
+  }, [smoothClose]);
 
   return (
     <>
@@ -45,29 +44,5 @@ const PopupWithForm = ({ title, name, onClose, children }) => {
   </>
   )
 }
-
-
-// class PopupWithForm extends Component {
-
-//   render() {
-//     const { title, name, onClose } = this.props;
-    
-//     return (
-//       <>
-//         <div className={`popup popup_type_${name} popup_is-opened`}>
-//           <div className='popup__content' >
-//             <button 
-//             type='button' 
-//             className='popup__close'
-//             onClick={onClose}
-//             ></button>
-//             <h3 className='popup__title'>{title}</h3>
-//             {this.props.children}
-//           </div>
-//         </div>
-//       </>
-//     );
-//   }
-// }
 
 export default PopupWithForm;
