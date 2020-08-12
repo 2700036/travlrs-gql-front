@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef} from 'react';
 
 const PopupWithForm = ({ title, name, onClose, children }) => {
+  
   const popup = useRef();
   const smoothClose = useCallback(() => {
     popup.current.classList.remove('popup_is-opened');
