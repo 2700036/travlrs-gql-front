@@ -15,7 +15,7 @@ const Card = ({cardInfo: {name, link, likes, _id}, onCardClick, onBasketClick, i
     })    
     }  
   
-  const classNames = isLiked ? 'card__like-button card__like-button_is-active' : 'card__like-button';
+ 
   return (
   <li className="places__item card">
     <Link to={`/places/${_id}`}>
@@ -31,7 +31,7 @@ const Card = ({cardInfo: {name, link, likes, _id}, onCardClick, onBasketClick, i
       </h2>
       <div className="card__likes">
         <button type="button" 
-        className={classNames}
+        className={`card__like-button ${isLiked ? 'card__like-button_is-active ' : ''}`}
         onClick={(e)=>{
           e.stopPropagation();
           handleLike(_id, !isLiked)}}
