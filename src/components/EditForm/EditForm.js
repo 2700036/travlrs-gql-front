@@ -13,9 +13,8 @@ const EditForm = ({initialUserInfo}) => {
     })
   }, [initialUserInfo.userName, initialUserInfo.userDescription])
   
-  const handleInput = ({target:{value, name}}) => {
-    inputs[name] = value;    
-    setInputs({...inputs});           
+  const handleInput = ({target:{value, name}}) => {        
+    setInputs({...inputs, [name]: value});           
   }  
   const {userName, userDescription} = inputs;
    
