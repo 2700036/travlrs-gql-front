@@ -1,9 +1,9 @@
 import React from 'react';
 import api from '../../utils/api';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
 
-const Card = ({cardInfo: {name, link, likes, _id}, onCardClick, onBasketClick, isUsersCard, isInitialLiked}) => {
+const Card = ({cardInfo: {name, link, likes, _id}, onBasketClick, isUsersCard, isInitialLiked}) => {
   const [isLiked, setIsLiked] = React.useState(isInitialLiked)
   const [likesLength, setLikesLength] = React.useState(likes.length)  
 
@@ -18,10 +18,11 @@ const Card = ({cardInfo: {name, link, likes, _id}, onCardClick, onBasketClick, i
  
   return (
   <li className="places__item card">
-    <Link to={`/places/${_id}`}>
+    <Link to={`/${_id}`}>
     <div className="card__image" style={{backgroundImage: `url(${link})`}}>
     </div>
     </Link>
+    
     {isUsersCard && <button type="button" className="card__delete-button"
     onClick={onBasketClick}
   ></button>}    
