@@ -13,7 +13,7 @@ import api from './../../utils/api';
 
 const App = () => {
   const [openedPopup, setOpenedPopup] = React.useState({});
-  const [selectedCard, setSelectedCard] = React.useState(false);
+  const [selectedCard, setSelectedCard] = React.useState(null);
   const [userInfo, setUserInfo] = React.useState({
     userName: "",
     userDescription: "",
@@ -26,7 +26,7 @@ const App = () => {
     Promise.all([api.getUserInfo(), api.getCardList()])
       .then(res => {
         const [{ name, about, avatar, _id }, cardsData] = res;
-        console.log(cardsData);
+        
         setUserInfo({
           userName: name,
           userDescription: about,
@@ -78,6 +78,12 @@ const App = () => {
     setOpenedPopup({});
     setSelectedCard(false);
   };
+  const handleEditSubmit = (userInfo) =>{
+    setUserInfo((info)=>{
+      return {...info, ...userInfo}
+    });
+    closeAllPopups();
+  }
 
   return (
     <CurrentUserContext.Provider value={userInfo}>
@@ -97,15 +103,13 @@ const App = () => {
       />
       <Footer />
 
-      {openedPopup.isEditProfilePopupOpen && (
-        <PopupWithForm
+      {openedPopup.isEditProfilePopupOpen && <EditForm  
           title="Редактировать профиль"
           name="edit"
           onClose={closeAllPopups}
-        >
-          {userInfo.userName && <EditForm initialUserInfo={userInfo} />}
-        </PopupWithForm>
-      )}
+          onSubmit={handleEditSubmit}
+        />      
+      }
 
       {openedPopup.isAddPlacePopupOpen && (
         <PopupWithForm

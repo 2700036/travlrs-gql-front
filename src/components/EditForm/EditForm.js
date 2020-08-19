@@ -1,21 +1,21 @@
 import React from 'react';
+import withPopup from '../hoc-helpers/withPopup';
+import withUserContext from '../hoc-helpers/withUserContext';
 
-const EditForm = ({initialUserInfo}) => {
+
+
+const EditForm = ({onSubmit, userContext}) => { 
   const [inputs, setInputs] = React.useState({
-    userName: '',
-    userDescription: ''
-  })  
-  
-  React.useEffect(()=>{    
-    setInputs({
-      userName: initialUserInfo.userName,
-      userDescription: initialUserInfo.userDescription
-    })
-  }, [initialUserInfo.userName, initialUserInfo.userDescription])
-  
+    userName: userContext.userName,
+    userDescription: userContext.userDescription
+  });   
   const handleInput = ({target:{value, name}}) => {        
     setInputs({...inputs, [name]: value});           
   }  
+  const handleSubmit = (e) =>{
+    e.preventDefault();
+    onSubmit(inputs);
+  }
   const {userName, userDescription} = inputs;
    
   return ( 
@@ -38,9 +38,9 @@ const EditForm = ({initialUserInfo}) => {
                />
         <span className="popup__error" id="owner-description-error"></span>
       </label>
-      <button type="submit" className="button popup__button">Сохранить</button>
+      <button type="submit" onClick={handleSubmit} className="button popup__button">Сохранить</button>
     </form>
   )
 }
 
-export default EditForm;
+export default withPopup(withUserContext(EditForm));
