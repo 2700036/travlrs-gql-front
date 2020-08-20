@@ -115,8 +115,8 @@ class Api {
 
 const api = new Api({
   address: 'https://nomoreparties.co',
-  groupId: `cohort0`,
-  token: `80a75492-21c5-4330-a02f-308029e94b63`,
+  groupId: `cohort9`,
+  token: `0f96e3cb-2b6c-4da4-8233-9011a7d4981c`,
 })
 
 export default api;

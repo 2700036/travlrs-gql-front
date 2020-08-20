@@ -8,29 +8,29 @@ export default (Wrapped) => {
     popup.current.addEventListener('transitionend', onClose, true)
   }, [onClose])
   
+  const hadleOverlayClick = ({target})=>{
+    if(target.classList.contains('popup')){
+      smoothClose();
+    }
+  }
   useEffect(() => {
     const escFunction = ({keyCode}) => {
       if(keyCode === 27) {
         smoothClose();
       }
     }
-    const hadleOverlayClick = ({target})=>{
-      if(target.classList.contains('popup')){
-        smoothClose();
-      }
-    }
     popup.current.classList.add('popup_is-opened')
     document.addEventListener("keydown", escFunction);
-    document.addEventListener("click", hadleOverlayClick);
+    
     return () => {
       document.removeEventListener("keydown", escFunction);
-      document.removeEventListener("click", hadleOverlayClick);
+      
       
     };
   }, [smoothClose]);
 
     return (      
-    <div ref={popup} className={`popup popup_type_${name} `}>
+    <div ref={popup} onClick={hadleOverlayClick} className={`popup popup_type_${name} `}>
       <div className='popup__content' >
         <button 
         type='button' 

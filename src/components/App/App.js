@@ -171,7 +171,7 @@ const App = () => {
           const currentCard = cards.find(({ _id }) => id === _id);
           return (
             currentCard && (
-              <ImagePopup card={currentCard} onClose={() => history.goBack()} />
+              <ImagePopup card={currentCard}  />
             )
           );
         }}
