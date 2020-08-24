@@ -170,9 +170,11 @@ const App = () => {
           const id = match.params.id;
           const currentCard = cards.find(({ _id }) => id === _id);
           return (
-            currentCard && (
-              <ImagePopup card={currentCard}  />
-            )
+            currentCard && <ImagePopup 
+            card={currentCard} 
+            onClose={()=>history.push('/')}  
+            />
+            
           );
         }}
       />

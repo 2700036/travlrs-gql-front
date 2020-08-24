@@ -1,42 +1,76 @@
 /* eslint-disable default-case */
 import React from 'react';
+import { useForm } from 'react-hook-form';
 
-const PlaceForm = ({onAddCardSubmit}) => {
-    const [inputs, setInputs] = React.useState({name: '', link: ''})
-    const onNameInput = (e) => {
-        setInputs({...inputs, name: e.target.value})       
-    }
-    const onUrlInput = (e) => {
-        setInputs({...inputs, link: e.target.value}) 
-     }
-     const onSubmit = (e) => {
-         e.preventDefault();
-         onAddCardSubmit(inputs)
-     }
-   
-    return (
-                <form className="popup__form" name="new-card" noValidate>
-        <label className="popup__label">
-          <input type="text" name="name" id="place-name"
-                 className="popup__input popup__input_type_card-name" placeholder="Название"
-                 required minLength="1" maxLength="30"
-                 onChange={onNameInput}
-                 />
-          <span className="popup__error" id="place-name-error"></span>
-        </label>
-        <label className="popup__label">
-          <input type="url" name="link" id="place-link"
-                 className="popup__input popup__input_type_url" placeholder="Ссылка на картинку"
-                 required
-                 onChange={onUrlInput}
-                 />
-          <span className="popup__error" id="place-link-error"></span>
-        </label>
-        <button type="submit" className="button popup__button popup__button_disabled"
-        onClick={onSubmit}
-        >Сохранить</button>
-      </form>
-    )
-}
+const PlaceForm = ({ onAddCardSubmit }) => {
+  const { handleSubmit, register, errors } = useForm({
+    mode: 'onChange',
+  });
+  const handleData = (data) => {
+    console.log(data);
+    onAddCardSubmit(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(handleData)} className='popup__form' noValidate>
+      <label className='popup__label'>
+        <input
+          name='name'
+          ref={register({
+            required: 'Это поле необходимо заполнить',
+            minLength: {
+              value: 2,
+              message: 'Должно быть не менее 2 символов',
+            },
+            maxLength: {
+              value: 30,
+              message: 'Должно быть не менее 30 символов',
+            },
+          })}
+          type='text'
+          id='place-name'
+          className={`popup__input ${errors.name ? 'popup__input_type_error' : ''}`}
+          placeholder='Название'
+          required
+          minLength='1'
+          maxLength='30'
+        />
+        {errors.name && (
+          <span className='popup__error' id='place-name-error'>
+            {errors.name.message}
+          </span>
+        )}
+      </label>
+      <label className='popup__label'>
+        <input
+          name='link'
+          ref={register({
+            required: 'Это поле необходимо заполнить',
+            pattern: {
+              value: /^(https:)/,
+              message: 'Должна быть ссылка',
+            },
+          })}
+          type='url'
+          id='place-link'
+          className={`popup__input ${errors.link ? 'popup__input_type_error' : ''}`}
+          placeholder='Ссылка на картинку'
+          required
+        />
+        {errors.link && (
+          <span className='popup__error' id='place-link-error'>
+            {errors.link.message}
+          </span>
+        )}
+      </label>
+      <button
+        type='submit'
+        className={`button popup__button ${errors.link || errors.name ? 'popup__button_disabled' : 0}`}
+      >
+        Сохранить
+      </button>
+    </form>
+  );
+};
 
 export default PlaceForm;
