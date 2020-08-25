@@ -1,8 +1,11 @@
 import React, {useContext} from 'react';
 import Card from '../Card/Card';
 import {CurrentUserContext} from './../currentUserContext/CurrentUserContext';
+import { Route, NavLink } from 'react-router-dom';
+import FriendCard from '../FriendCard/FriendCard';
 
-const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, cards}) => {
+
+const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, cards, users}) => {
   
   const {userName, userDescription, userAvatar, userId} = useContext(CurrentUserContext);
   
@@ -19,7 +22,15 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
     isUsersCard={userId===card.owner._id}
     isInitialLiked={isLiked}
     />
-  });  
+  }); 
+  const friends = users.map((user)=>{  
+    
+    return <FriendCard 
+    cardInfo={user}    
+    key={user._id}    
+    isUsersCard={userId===user._id}    
+    />
+  });   
   
     return (
      <>
@@ -45,9 +56,31 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
       onClick={onAddPlace}
       ></button>
     </section>
+    <div className='tabs page__section'>
+      <NavLink to='/cards/' className='tab' activeClassName='tab_active'>
+      Карточки
+      </NavLink>
+      <NavLink to='/friends/' className='tab' activeClassName='tab_active'>
+      Друзья
+      </NavLink>
+    </div>
     <section className="places page__section">
       <ul className="places__list">
-        {cardsElems}
+        <Route path='/' render={()=>{
+          return (
+          <p style={{'margin-top': '100px'}} className='profile__title'>{`Добро пожаловать, ${userName}!`}</p>
+          )
+        }}/>
+        <Route path='/cards/' render={()=>{
+          return (
+            cardsElems
+          )
+        }} /> 
+        <Route path='/friends/' render={()=>{
+          return (
+            friends
+          )
+        }} />       
       </ul>
     </section>
   </main>  

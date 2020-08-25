@@ -1,5 +1,5 @@
 .popup__caption {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 15px;
   color: #fff;
   position: absolute;
@@ -9,4 +9,9 @@
   /*
     позиционируем абсолютно. В задании сказано только про максимальные размеры изображения.
   */
+}
+
+.popup__about {
+  font-size: 12px;
+  top: calc(100% + 30px);
 }

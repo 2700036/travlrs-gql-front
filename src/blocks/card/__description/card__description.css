@@ -6,3 +6,12 @@
   padding: 25px 20px;
   /*Чтобы по ПЭПЭ отступы снизу-сверху одинаковые            */
 }
+.card__friend-description {
+  display: flex;
+  
+  align-items: center;
+  background: #fff;
+  padding: 15px 20px;
+  flex-direction: column;
+  align-items: flex-start;
+}

@@ -24,6 +24,16 @@ class Api {
       .catch(err => console.log(`Загрузка карточек: ${err}`))
   }
 
+  getUsers() {
+    return fetch(`${this._address}/${this._groupId}/users`, {
+      headers: {
+        authorization: this._token
+      }
+    })
+      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+      .catch(err => console.log(`Загрузка друзей: ${err}`))
+  }
+
   addCard({ name, link }) {
     // renderLoading(true);
 

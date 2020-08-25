@@ -9,7 +9,7 @@ import PlaceForm from '../PlaceForm/PlaceForm';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import {CurrentUserContext} from './../currentUserContext/CurrentUserContext';
 import api from './../../utils/api';
-
+import './app.css';
 
 const App = () => {
   const [openedPopup, setOpenedPopup] = React.useState({});
@@ -21,11 +21,13 @@ const App = () => {
     userId: ""
   });
   const [cards, setCards] = React.useState([]);
+  const [users, setUsers] = React.useState([]);
+
 
   React.useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getCardList()])
+    Promise.all([api.getUserInfo(), api.getCardList(), api.getUsers()])
       .then(res => {
-        const [{ name, about, avatar, _id }, cardsData] = res;
+        const [{ name, about, avatar, _id }, cardsData, users] = res;
         
         setUserInfo({
           userName: name,
@@ -34,12 +36,14 @@ const App = () => {
           userId: _id
         });
         setCards(cardsData);
+        setUsers(users)
       })
       .catch(err => {
         console.log(err);
       });
+       
   }, []);
-
+  
   const onDeleteCardSubmit = e => {
     e.preventDefault();
     api
@@ -89,9 +93,9 @@ const App = () => {
     <CurrentUserContext.Provider value={userInfo}>
     <Router>
       <Header />
-      <Main
+      {cards.length && <Main
         cards={cards}
-        
+        users={users}
         onEditProfile={handleEditProfileClick}
         onAddPlace={handleAddPlaceClick}
         onEditAvatar={handleEditAvatarClick}
@@ -100,7 +104,7 @@ const App = () => {
         onClose={closeAllPopups}
         onAddCardSubmit={onAddCardSubmit}
         openedPopup={openedPopup}
-      />
+      />}
       <Footer />
 
       {openedPopup.isEditProfilePopupOpen && <EditForm  
@@ -165,14 +169,29 @@ const App = () => {
       )}
 
       <Route
-        path="/:id"
+        path="/cards/:id"
         render={({ match, history }) => {
           const id = match.params.id;
           const currentCard = cards.find(({ _id }) => id === _id);
           return (
             currentCard && <ImagePopup 
             card={currentCard} 
-            onClose={()=>history.push('/')}  
+            onClose={()=>history.push('/cards/')}  
+            />
+            
+          );
+        }}
+      />
+      <Route
+        path="/friends/:id"
+        render={({ match, history }) => {
+          const id = match.params.id;
+          const currentUser = users.find(({ _id }) => id === _id);
+          console.log(currentUser)
+          return (
+            currentUser && <ImagePopup 
+            card={currentUser} 
+            onClose={()=>history.push('/friends/')}  
             />
             
           );

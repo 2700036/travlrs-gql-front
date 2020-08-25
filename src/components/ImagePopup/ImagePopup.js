@@ -42,8 +42,9 @@ const ImagePopup = ({card, onClose})=> {
             onClick={smoothClose}
             ></button>
             
-            <img alt={`Фото места ${card.name}`} src={card.link} className='popup__image' />
+            <img alt={`Фото места ${card.name}`} src={card.link || card.avatar} className='popup__image' />
     <p className='popup__caption'>{card.name}</p>
+    {card.about ? <p className='popup__caption popup__about'>{card.about}</p> : ""}
           </div>
         </div>
       </>

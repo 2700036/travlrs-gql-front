@@ -1,6 +1,7 @@
 .profile__title {
   font-size: 42px;
   line-height: 48px;
+  color: #fff;
   /*Подгон под ПЭПЭ - без него 56px*/
   font-weight: 400;
   text-overflow: ellipsis;

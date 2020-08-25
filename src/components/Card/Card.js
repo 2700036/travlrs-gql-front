@@ -1,11 +1,12 @@
 import React from 'react';
 import api from '../../utils/api';
-import { Link } from 'react-router-dom'
+import { useHistory} from 'react-router-dom'
 
 
 const Card = ({cardInfo: {name, link, likes, _id}, onBasketClick, isUsersCard, isInitialLiked}) => {
+  const history = useHistory();
   const [isLiked, setIsLiked] = React.useState(isInitialLiked)
-  const [likesLength, setLikesLength] = React.useState(likes.length)  
+  const [likesLength, setLikesLength] = React.useState(likes.length) ; 
 
   const handleLike = (cardId, like) => {
     api.changeLikeCardStatus(cardId, like)
@@ -18,10 +19,11 @@ const Card = ({cardInfo: {name, link, likes, _id}, onBasketClick, isUsersCard, i
  
   return (
   <li className="places__item card">
-    <Link to={`/${_id}`}>
-    <div className="card__image" style={{backgroundImage: `url(${link})`}}>
+    
+    <div onClick={()=>history.push(`${_id}`)}
+    className="card__image" style={{backgroundImage: `url(${link})`}}>
     </div>
-    </Link>
+    
     
     {isUsersCard && <button type="button" className="card__delete-button"
     onClick={onBasketClick}
