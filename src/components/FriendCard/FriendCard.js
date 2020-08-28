@@ -12,6 +12,9 @@ const FriendCard = ({cardInfo: {name, about, avatar, _id}}) => {
     <div onClick={()=>history.push(`${_id}`)}
     className="card__image" style={{backgroundImage: `url(${avatar})`}}>
     </div>
+    <div 
+    className="card__image-blur" style={{backgroundImage: `url(${avatar})`}}>
+    </div>
       
     <div className="card__friend-description">
       <h2 className="card__title">

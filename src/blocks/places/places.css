@@ -4,6 +4,8 @@
 .places {
   font-family: 'Inter', Arial, sans-serif;
   padding: 15px 0 36px;
+  max-width: 2000px;
+  
 }
 
 @media screen and (max-width: 568px) {

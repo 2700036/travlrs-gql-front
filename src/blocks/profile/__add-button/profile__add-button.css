@@ -5,8 +5,7 @@
   background-size: 22px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
-  border-radius: 2px;
-  /*Че это*/
+  border-radius: 15%;
   border: 2px solid #fff;
   -webkit-transition: 0.3s;
   -moz-transition: 0.3s;

@@ -66,9 +66,9 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
     </div>
     <section className="places page__section">
       <ul className="places__list">
-        <Route path='/' render={()=>{
+        <Route exact path='/' render={()=>{
           return (
-          <p style={{'margin-top': '100px'}} className='profile__title'>{`Добро пожаловать, ${userName}!`}</p>
+          <p style={{'marginTop': '100px'}} className='profile__title'>{`Добро пожаловать, ${userName}!`}</p>
           )
         }}/>
         <Route path='/cards/' render={()=>{

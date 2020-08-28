@@ -23,6 +23,9 @@ const Card = ({cardInfo: {name, link, likes, _id}, onBasketClick, isUsersCard, i
     <div onClick={()=>history.push(`${_id}`)}
     className="card__image" style={{backgroundImage: `url(${link})`}}>
     </div>
+    <div 
+    className="card__image-blur" style={{backgroundImage: `url(${link})`}}>
+    </div>
     
     
     {isUsersCard && <button type="button" className="card__delete-button"

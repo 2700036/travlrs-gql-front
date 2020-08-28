@@ -14,7 +14,7 @@
 
 .header::before {
   content: '';
-  width: 100%;
+  width: 80%;
   height: 1px;
   opacity: 0.7;
   background: #545454;
@@ -27,6 +27,7 @@
   transform: translateX(-50%);
   /*Центруем. Студенты знают про транслейт*/
   bottom: 0;
+  
 }
 /*Лучшее решение здесь -- можно лучше*/
 
