@@ -1,10 +1,11 @@
 import React from 'react';
-import logo from '../../images/logo.svg';
+import logo from '../../images/logo.ico';
 
 const Header = (props) => {
   return (
     <header className="header page__section">
-    <h1 className="logo header__logo">Travlr.</h1>
+      <img src={logo} className='logo'/>
+    <h1 className="header__logo">Travlrs.</h1>
     
   </header>
   )

@@ -5,6 +5,11 @@
   color: white;
 }
 
+.logo {
+  height: 45px;
+    margin-right: -3px;
+}
+
 @media screen and (max-width: 480px) {
   .header__logo {
     width: 104px;
