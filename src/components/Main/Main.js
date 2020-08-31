@@ -58,7 +58,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
     </section>
     <div className='tabs page__section'>
       <NavLink to='/cards/' className='tab' activeClassName='tab_active'>
-      Карточки
+      Места
       </NavLink>
       <NavLink to='/friends/' className='tab' activeClassName='tab_active'>
       Друзья

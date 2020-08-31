@@ -4,7 +4,8 @@ import logo from '../../images/logo.svg';
 const Header = (props) => {
   return (
     <header className="header page__section">
-    <img src={logo} alt="Логотип проекта масто" className="logo header__logo"/>
+    <h1 className="logo header__logo">Travlr.</h1>
+    
   </header>
   )
 };
