@@ -10,6 +10,8 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import {CurrentUserContext} from './../currentUserContext/CurrentUserContext';
 import api from './../../utils/api';
 import './app.css';
+import { CardsContext } from '../CardsContext/CardsContext';
+
 
 const App = () => {
   const [openedPopup, setOpenedPopup] = React.useState({});
@@ -91,6 +93,7 @@ const App = () => {
 
   return (
     <CurrentUserContext.Provider value={userInfo}>
+      <CardsContext.Provider value={setCards}>
     <Router>
       <Header />
       {cards.length && <Main
@@ -198,6 +201,7 @@ const App = () => {
         }}
       />
     </Router>
+    </CardsContext.Provider>
     </CurrentUserContext.Provider>
 
   );

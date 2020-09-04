@@ -13,6 +13,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
   const cardsElems = cards.map((card)=>{  
     const isLiked = card.likes.some(({_id})=>userId===_id);
     return <Card 
+    userId={userId}
     cardInfo={card}
     onBasketClick={(e)=>{
       e.stopPropagation();
@@ -30,7 +31,25 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
     key={user._id}    
     isUsersCard={userId===user._id}    
     />
-  });   
+  });  
+  const sortFavorites = cards.filter((card)=>card.likes.some(({_id})=>userId===_id)).sort((a,b)=>{    
+    return b.likes.length - a.likes.length
+  });
+  
+  const favorites = sortFavorites.map((card)=>{  
+      const isLiked = card.likes.some(({_id})=>userId===_id);
+      return <Card 
+      userId={userId}
+      cardInfo={card}
+      onBasketClick={(e)=>{
+        e.stopPropagation();
+        handleBasketIconClick(card)
+      }}
+      key={card._id}    
+      isUsersCard={userId===card.owner._id}
+      isInitialLiked={isLiked}
+      />
+    })
   
     return (
      <>
@@ -63,6 +82,9 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
       <NavLink to='/friends/' className='tab' activeClassName='tab_active'>
       Друзья
       </NavLink>
+      <NavLink style={{'marginLeft': 'auto'}} to='/favorite/' className='tab' activeClassName='tab_active'>
+      <div className={`card__like-button card__like-button_is-active`}></div>
+      </NavLink>
     </div>
     <section className="places page__section">
       <ul className="places__list">
@@ -79,6 +101,11 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
         <Route path='/friends/' render={()=>{
           return (
             friends
+          )
+        }} />       
+        <Route path='/favorite/' render={()=>{
+          return (
+            favorites
           )
         }} />       
       </ul>

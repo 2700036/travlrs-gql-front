@@ -1,18 +1,32 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import api from '../../utils/api';
-import { useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { CardsContext } from '../CardsContext/CardsContext';
 
 
-const Card = ({cardInfo: {name, link, likes, _id}, onBasketClick, isUsersCard, isInitialLiked}) => {
+const Card = ({cardInfo: {name, link, likes, _id}, onBasketClick, isUsersCard, isInitialLiked, userId}) => {
   const history = useHistory();
-  const [isLiked, setIsLiked] = React.useState(isInitialLiked)
-  const [likesLength, setLikesLength] = React.useState(likes.length) ; 
+  const setCards = useContext(CardsContext);
+  const [isLiked, setIsLiked] = useState(isInitialLiked)
+  const [likesLength, setLikesLength] = useState(likes.length);
+  const [newLikes, setNewLikes] = useState(likes);
+
+//   const likesNames = newLikes.reduce((acc, cur, i)=>{    
+//     return acc += i === 0 ? cur.name : `, ${cur.name}`
+//   }, '') 
+// console.log(likesNames)
 
   const handleLike = (cardId, like) => {
     api.changeLikeCardStatus(cardId, like)
     .then(res=>{      
       setLikesLength(res.likes.length);
-      setIsLiked(!isLiked);      
+      setIsLiked(!isLiked); 
+      setCards(cards=>{
+        const newCards = JSON.parse(JSON.stringify(cards));        
+        const card = newCards.find(({_id})=>_id===res._id);
+        card.likes = [...res.likes];
+        return newCards
+      })    
     })    
     }  
   
