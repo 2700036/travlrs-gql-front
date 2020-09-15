@@ -42,7 +42,7 @@ const Card = ({cardInfo: {name, link, likes, _id}, onBasketClick, isUsersCard, i
     </div>
     
     
-    {isUsersCard && <button type="button" className="card__delete-button"
+    {_id!=='5e690ffa69fae7001f72a55f' && isUsersCard && <button type="button" className="card__delete-button"
     onClick={onBasketClick}
   ></button>}    
     <div className="card__description">

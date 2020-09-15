@@ -21,7 +21,7 @@ body
   border-top-right-radius: 15px;
   margin-right: 4px;
   border-bottom: none;
-  babackground: linear-gradient(to bottom, rgb(31, 31, 31) 50%, #07070700);
+  background: linear-gradient(to bottom, rgb(31, 31, 31) 50%, #07070700);
   transition: transform 0.2s ease;
 }
 

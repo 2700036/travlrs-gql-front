@@ -20,8 +20,7 @@ class Api {
         authorization: this._token
       }
     })
-      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
-      .then(res =>res.filter(({likes})=>likes.length>1))
+      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))      
       .catch(err => console.log(`Загрузка карточек: ${err}`))
   }
 

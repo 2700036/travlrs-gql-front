@@ -7,7 +7,6 @@ const PlaceForm = ({ onAddCardSubmit }) => {
     mode: 'onChange',
   });
   const handleData = (data) => {
-    console.log(data);
     onAddCardSubmit(data);
   };
 

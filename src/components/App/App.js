@@ -14,31 +14,6 @@ import { CardsContext } from '../CardsContext/CardsContext';
 import EditAvatar from '../EditAvatar/EditAvatar';
 import Spinner from '../Spinner/Spinner';
 
-
-//! Обнуление данных пользователей от дураков.
-const currentSession = () => { 
-  if(localStorage.user){
-    const { name, about, avatar, _id } = JSON.parse(localStorage.user);
-    console.log(name, about, avatar, _id)
-    return Promise.all([api.getCardList(), api.getUsers()])
-    .then(res => {
-      const [cardsData, users] = res;
-    return [{ name, about, avatar, _id }, cardsData, users]})
-  } else {    
-    return api.setUserInfo({name: 'Серёга Бирюков', about: 'Бэкпэкер и каучсёрфер'})
-    .then(()=>{
-      return api.setUserAvatar({avatar: 'https://sun9-4.userapi.com/w-Ge9P349j4ZVTXd2Zh2J0Prj8yAfhZ6l2Y8YQ/NTw6lM-rdKg.jpg'})
-      .then(()=>{
-        return Promise.all([api.getUserInfo(), api.getCardList(), api.getUsers()])
-      .then(res => {      
-        localStorage.setItem('user' , JSON.stringify(res[0]))
-        return res})
-      }) 
-    })
-     
-  }  
-}
-
 const App = () => {
   const [openedPopup, setOpenedPopup] = React.useState({});
   const [selectedCard, setSelectedCard] = React.useState(null);
@@ -61,8 +36,11 @@ const App = () => {
           userDescription: about,
           userAvatar: avatar,
           userId: _id
-        });
-        setCards(cardsData);
+        });                  
+        setCards(cardsData.filter((card)=>{          
+          if (card.owner._id === _id){return card};
+          if (card.likes.length>2){return card};
+        }));
         setUsers(users)
       })
       .catch(err => {
@@ -87,7 +65,7 @@ const App = () => {
 
   const onAddCardSubmit = ({ name, link }) => {
     api.addCard({ name, link }).then(card => {
-      setCards([...cards, card]);
+      setCards([card, ...cards]);
       closeAllPopups();
     });
   };
@@ -223,11 +201,24 @@ const App = () => {
         render={({ match, history }) => {
           const id = match.params.id;
           const currentUser = users.find(({ _id }) => id === _id);
-          console.log(currentUser)
           return (
             currentUser && <ImagePopup 
             card={currentUser} 
             onClose={()=>history.push('/friends/')}  
+            />
+            
+          );
+        }}
+      />
+            <Route
+        path="/favorite/:id"
+        render={({ match, history }) => {
+          const id = match.params.id;
+          const currentCard = cards.find(({ _id }) => id === _id);
+          return (
+            currentCard && <ImagePopup 
+            card={currentCard} 
+            onClose={()=>history.push('/favorite/')}  
             />
             
           );
@@ -241,3 +232,27 @@ const App = () => {
 };
 
 export default App;
+
+
+
+//! Обнуление данных пользователей от дураков.
+function currentSession(){ 
+  if(localStorage.user){
+    const { name, about, avatar, _id } = JSON.parse(localStorage.user);
+    return Promise.all([api.getCardList(), api.getUsers()])
+    .then(res => {
+      const [cardsData, users] = res;
+    return [{ name, about, avatar, _id }, cardsData, users]})
+  } else {    
+    return api.setUserInfo({name: 'Серёга Бирюков', about: 'Бэкпэкер и каучсёрфер'})
+    .then(()=>{
+      return api.setUserAvatar({avatar: 'https://sun9-4.userapi.com/w-Ge9P349j4ZVTXd2Zh2J0Prj8yAfhZ6l2Y8YQ/NTw6lM-rdKg.jpg'})
+      .then(()=>{
+        return Promise.all([api.getUserInfo(), api.getCardList(), api.getUsers()])
+      .then(res => {      
+        localStorage.setItem('user' , JSON.stringify(res[0]))
+        return res})
+      }) 
+    })     
+  }  
+}
