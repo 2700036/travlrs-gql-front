@@ -15,7 +15,7 @@ const EditForm = ({ onSubmit, userContext }) => {
     <form className='popup__form' onSubmit={handleSubmit(handleData)} name='edit' noValidate>
       <label className='popup__label'>
         <input
-          name='userName'
+          name='name'
           ref={register({
             required: 'Это поле необходимо заполнить',
             pattern: {
@@ -33,18 +33,18 @@ const EditForm = ({ onSubmit, userContext }) => {
           })}
           type='text'
           id='owner-name'
-          className={`popup__input ${errors.userName ? 'popup__input_type_error' : ''}`}
+          className={`popup__input ${errors.name ? 'popup__input_type_error' : ''}`}
           defaultValue={userContext.userName}
         />
-        {errors.userName && (
+        {errors.name && (
           <span className='popup__error' id='owner-name-error'>
-            {errors.userName.message}
+            {errors.name.message}
           </span>
         )}
       </label>
       <label className='popup__label'>
         <input
-          name='userDescription'
+          name='about'
           ref={register({
             required: 'Это поле необходимо заполнить',
             minLength: {
@@ -53,7 +53,7 @@ const EditForm = ({ onSubmit, userContext }) => {
             },
             maxLength: {
               value: 30,
-              message: 'Должно быть не менее 30 символов',
+              message: 'Должно быть не более 30 символов',
             },
             pattern: {
               value: /^[a-zA-Zа-яА-Я -]{1,}/,
@@ -62,15 +62,15 @@ const EditForm = ({ onSubmit, userContext }) => {
           })}
           type='text'
           id='owner-description'
-          className={`popup__input ${errors.userDescription ? 'popup__input_type_error' : ''}`}
+          className={`popup__input ${errors.about ? 'popup__input_type_error' : ''}`}
           required
           minLength='2'
           maxLength='200'
           defaultValue={userContext.userDescription}
         />
-        {errors.userDescription && (
+        {errors.about && (
           <span className='popup__error' id='owner-description-error'>
-            {errors.userDescription.message}
+            {errors.about.message}
           </span>
         )}
       </label>

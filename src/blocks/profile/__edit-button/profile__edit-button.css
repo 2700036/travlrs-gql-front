@@ -21,6 +21,7 @@
 
 .profile__edit-button:hover {
   opacity: 0.6;
+  background: #8EA737 url('../../../images/edit-icon.svg') center no-repeat;
 }
 
 @media screen and (max-width: 480px) {

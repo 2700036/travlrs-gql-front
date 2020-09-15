@@ -74,8 +74,6 @@ class Api {
   }
 
   setUserInfo({ name, about }) {
-    renderLoading(true);
-
     return fetch(`${this._address}/${this._groupId}/users/me`, {
       method: 'PATCH',
       headers: {

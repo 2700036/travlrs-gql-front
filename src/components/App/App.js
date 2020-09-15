@@ -11,6 +11,7 @@ import {CurrentUserContext} from './../currentUserContext/CurrentUserContext';
 import api from './../../utils/api';
 import './app.css';
 import { CardsContext } from '../CardsContext/CardsContext';
+import EditAvatar from '../EditAvatar/EditAvatar';
 
 
 const App = () => {
@@ -84,11 +85,25 @@ const App = () => {
     setOpenedPopup({});
     setSelectedCard(false);
   };
-  const handleEditSubmit = (userInfo) =>{
-    setUserInfo((info)=>{
-      return {...info, ...userInfo}
+  const handleEditSubmit = (userInfo) =>{    
+    api.setUserInfo(userInfo)
+    .then(({name, about}) =>{
+      setUserInfo((info)=>{
+      return {...info, userName: name,
+        userDescription: about}
     });
-    closeAllPopups();
+    closeAllPopups()
+  })    
+  }
+
+  const onAvatarEditSubmit = (url) => {
+    api.setUserAvatar(url)
+    .then(({avatar}) =>{
+      setUserInfo((info)=>{
+      return {...info, userAvatar: avatar}
+    });
+    closeAllPopups()
+  })   
   }
 
   return (
@@ -120,7 +135,7 @@ const App = () => {
 
       {openedPopup.isAddPlacePopupOpen && (
         <PopupWithForm
-          title="Предложить путешествие"
+          title="Предложить место"
           name="new-card"
           onClose={closeAllPopups}
         >
@@ -152,22 +167,7 @@ const App = () => {
           name="edit-avatar"
           onClose={closeAllPopups}
         >
-          <form className="popup__form" name="edit-avatar" noValidate>
-            <label className="popup__label">
-              <input
-                type="url"
-                name="avatar"
-                id="owner-avatar"
-                className="popup__input popup__input_type_description"
-                placeholder="Ссылка на изображение"
-                required
-              />
-              <span className="popup__error" id="owner-avatar-error"></span>
-            </label>
-            <button type="submit" className="button popup__button">
-              Сохранить
-            </button>
-          </form>
+         <EditAvatar onAvatarEditSubmit={onAvatarEditSubmit}/>
         </PopupWithForm>
       )}
 
