@@ -12,7 +12,32 @@ import api from './../../utils/api';
 import './app.css';
 import { CardsContext } from '../CardsContext/CardsContext';
 import EditAvatar from '../EditAvatar/EditAvatar';
+import Spinner from '../Spinner/Spinner';
 
+
+//! Обнуление данных пользователей от дураков.
+const currentSession = () => { 
+  if(localStorage.user){
+    const { name, about, avatar, _id } = JSON.parse(localStorage.user);
+    console.log(name, about, avatar, _id)
+    return Promise.all([api.getCardList(), api.getUsers()])
+    .then(res => {
+      const [cardsData, users] = res;
+    return [{ name, about, avatar, _id }, cardsData, users]})
+  } else {    
+    return api.setUserInfo({name: 'Серёга Бирюков', about: 'Бэкпэкер и каучсёрфер'})
+    .then(()=>{
+      return api.setUserAvatar({avatar: 'https://sun9-4.userapi.com/w-Ge9P349j4ZVTXd2Zh2J0Prj8yAfhZ6l2Y8YQ/NTw6lM-rdKg.jpg'})
+      .then(()=>{
+        return Promise.all([api.getUserInfo(), api.getCardList(), api.getUsers()])
+      .then(res => {      
+        localStorage.setItem('user' , JSON.stringify(res[0]))
+        return res})
+      }) 
+    })
+     
+  }  
+}
 
 const App = () => {
   const [openedPopup, setOpenedPopup] = React.useState({});
@@ -28,10 +53,9 @@ const App = () => {
 
 
   React.useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getCardList(), api.getUsers()])
-      .then(res => {
-        const [{ name, about, avatar, _id }, cardsData, users] = res;
-        
+    currentSession()
+        .then(res => {
+          const [{ name, about, avatar, _id }, cardsData, users] = res;
         setUserInfo({
           userName: name,
           userDescription: about,
@@ -88,17 +112,24 @@ const App = () => {
   const handleEditSubmit = (userInfo) =>{    
     api.setUserInfo(userInfo)
     .then(({name, about}) =>{
+      const user = JSON.parse( localStorage.user );
+      user.name = userInfo.name;
+      user.about = userInfo.about;
+      localStorage.setItem('user', JSON.stringify(user))
       setUserInfo((info)=>{
-      return {...info, userName: name,
-        userDescription: about}
-    });
+        return {...info, userName: name,
+          userDescription: about}
+        });
     closeAllPopups()
   })    
   }
 
-  const onAvatarEditSubmit = (url) => {
+  const onAvatarEditSubmit = (url) => {    
     api.setUserAvatar(url)
     .then(({avatar}) =>{
+      const user = JSON.parse( localStorage.user );
+      user.avatar = url.avatar;      
+      localStorage.setItem('user', JSON.stringify(user))
       setUserInfo((info)=>{
       return {...info, userAvatar: avatar}
     });
@@ -111,7 +142,8 @@ const App = () => {
       <CardsContext.Provider value={setCards}>
     <Router>
       <Header />
-      {cards.length && <Main
+      {
+      (cards.length && <Main
         cards={cards}
         users={users}
         onEditProfile={handleEditProfileClick}
@@ -122,7 +154,8 @@ const App = () => {
         onClose={closeAllPopups}
         onAddCardSubmit={onAddCardSubmit}
         openedPopup={openedPopup}
-      />}
+      />) ||
+       <Spinner/>}
       <Footer />
 
       {openedPopup.isEditProfilePopupOpen && <EditForm  

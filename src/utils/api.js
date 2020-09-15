@@ -21,6 +21,7 @@ class Api {
       }
     })
       .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+      .then(res =>res.filter(({likes})=>likes.length>1))
       .catch(err => console.log(`Загрузка карточек: ${err}`))
   }
 
@@ -90,7 +91,7 @@ class Api {
   }
 
   setUserAvatar({ avatar }) {
-    renderLoading(true);
+    // renderLoading(true);
 
     return fetch(`${this._address}/${this._groupId}/users/me/avatar`, {
       method: 'PATCH',
