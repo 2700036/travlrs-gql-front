@@ -3,6 +3,7 @@ import Card from '../Card/Card';
 import {CurrentUserContext} from './../currentUserContext/CurrentUserContext';
 import { Route, NavLink } from 'react-router-dom';
 import FriendCard from '../FriendCard/FriendCard';
+import WelcomeScreen from '../WelcomeScreen/WelcomeScreen';
 
 
 const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, cards, users}) => {
@@ -65,12 +66,8 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
       </NavLink>
     </div>
     <section className="places page__section">
+        <Route exact path='/' render={WelcomeScreen}/>
       <ul className="places__list">
-        <Route exact path='/' render={()=>{
-          return (
-          <p style={{'marginTop': '100px'}} className='profile__title'>{`Добро пожаловать, ${userName}!`}</p>
-          )
-        }}/>
         <Route path='/cards/' render={()=>{
           return (
             cardsElems

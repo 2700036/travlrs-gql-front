@@ -117,7 +117,7 @@ const App = () => {
 
       {openedPopup.isAddPlacePopupOpen && (
         <PopupWithForm
-          title="Новое место"
+          title="Предложить путешествие"
           name="new-card"
           onClose={closeAllPopups}
         >
