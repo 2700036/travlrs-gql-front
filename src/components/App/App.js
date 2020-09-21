@@ -6,15 +6,19 @@ import ImagePopup from '../ImagePopup/ImagePopup';
 import PopupWithForm from '../PopupWithForm/PopupWithForm';
 import EditForm from '../EditForm/EditForm';
 import PlaceForm from '../PlaceForm/PlaceForm';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import {CurrentUserContext} from './../currentUserContext/CurrentUserContext';
 import api from './../../utils/api';
 import './app.css';
 import { CardsContext } from '../CardsContext/CardsContext';
 import EditAvatar from '../EditAvatar/EditAvatar';
 import Spinner from '../Spinner/Spinner';
+import Login from '../Login/Login';
+import Register from '../Register/Register';
+
 
 const App = () => {
+  const [loggedIn, setLoggedIn] = React.useState(true)
   const [openedPopup, setOpenedPopup] = React.useState({});
   const [selectedCard, setSelectedCard] = React.useState(null);
   const [userInfo, setUserInfo] = React.useState({
@@ -28,7 +32,8 @@ const App = () => {
 
 
   React.useEffect(() => {
-    currentSession()
+    // currentSession()
+    Promise.all([api.getUserInfo(), api.getCardList(), api.getUsers()])
         .then(res => {
           const [{ name, about, avatar, _id }, cardsData, users] = res;
         setUserInfo({
@@ -90,10 +95,10 @@ const App = () => {
   const handleEditSubmit = (userInfo) =>{    
     api.setUserInfo(userInfo)
     .then(({name, about}) =>{
-      const user = JSON.parse( localStorage.user );
-      user.name = userInfo.name;
-      user.about = userInfo.about;
-      localStorage.setItem('user', JSON.stringify(user))
+      // const user = JSON.parse( localStorage.user );
+      // user.name = userInfo.name;
+      // user.about = userInfo.about;
+      // localStorage.setItem('user', JSON.stringify(user))
       setUserInfo((info)=>{
         return {...info, userName: name,
           userDescription: about}
@@ -105,9 +110,9 @@ const App = () => {
   const onAvatarEditSubmit = (url) => {    
     api.setUserAvatar(url)
     .then(({avatar}) =>{
-      const user = JSON.parse( localStorage.user );
-      user.avatar = url.avatar;      
-      localStorage.setItem('user', JSON.stringify(user))
+      // const user = JSON.parse( localStorage.user );
+      // user.avatar = url.avatar;      
+      // localStorage.setItem('user', JSON.stringify(user))
       setUserInfo((info)=>{
       return {...info, userAvatar: avatar}
     });
@@ -120,8 +125,17 @@ const App = () => {
       <CardsContext.Provider value={setCards}>
     <Router>
       <Header />
-      {
-      (cards.length && <Main
+      <Switch>
+      <Route path="/register">
+              <Register />
+            </Route>
+            <Route path="/login">
+              <Login 
+              // handleLogin={handleLogin} 
+              />
+            </Route>
+            <Route exact path="/">
+              {loggedIn ? (cards.length && <Main
         cards={cards}
         users={users}
         onEditProfile={handleEditProfileClick}
@@ -132,8 +146,11 @@ const App = () => {
         onClose={closeAllPopups}
         onAddCardSubmit={onAddCardSubmit}
         openedPopup={openedPopup}
-      />) ||
-       <Spinner/>}
+      />) : (
+                <Redirect to="/login" />
+              )}
+            </Route>
+      </Switch>      
       <Footer />
 
       {openedPopup.isEditProfilePopupOpen && <EditForm  
