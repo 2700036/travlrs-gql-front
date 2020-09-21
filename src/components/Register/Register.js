@@ -1,107 +1,75 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import * as auth from "../auth.js";
-
-import "./register.css";
+import "../Login/login.css";
 
 class Register extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: "",
+  
+  state = {      
       email: "",
-      password: "",
-      confirmPassword: "",
-      calGoal: ""
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChangeCals = this.handleChangeCals.bind(this);
-  }
+      password: ""      
+    };    
   handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({
       [name]: value
     });
-  };
-  handleChangeCals = (e) => {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value
-    });
-  };
+  };  
   handleSubmit = (e) => {
-    e.preventDefault();
-    if (this.state.password === this.state.confirmPassword) {
+    e.preventDefault();   
       auth
-        .register(
-          this.state.username,
-          this.state.password,
+        .register(          
           this.state.email,
-          this.state.calGoal
+          this.state.password          
         )
         .then((res) => {
-          if (res) {
+          if (res) {            
+            this.props.setAuthStatus(res);
+            this.props.openLoginStatusPopup();
             this.props.history.push("/login");
           } else {
             console.log("Произошла ошибка.");
           }
         });
-    }
+    
   };
   render() {
     return (
-      <div className="register">
-        <p className="register__welcome">Пожалуйста, зарегистрируйтесь.</p>
-        <form onSubmit={this.handleSubmit} className="register__form">
-          <label for="username">Логин:</label>
+      <div className="login">
+        <p className="login__welcome">Регистрация</p>
+        <form onSubmit={this.handleSubmit} className="login__form">
+          
           <input
-            id="username"
-            name="username"
-            type="text"
+            required
+            id="email"
+            name="email"
+            type="email"            
+            placeholder='Email'
             value={this.state.username}
             onChange={this.handleChange}
           />
-          <label for="email">Email:</label>
+          
           <input
-            id="email"
-            name="email"
-            type="email"
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
-          <label for="password">Пароль:</label>
-          <input
+            required
             id="password"
             name="password"
             type="password"
+            placeholder='Пароль'
             value={this.state.password}
             onChange={this.handleChange}
-          />
-          <label for="confirmPassword">Повторите пароль:</label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            value={this.state.confirmPassword}
-            onChange={this.handleChange}
-          />
-          <label for="calGoal">Калории за день:</label>
-          
-          <div className="register__button-container">
+          />          
             <button
               type="submit"
               onSubmit={this.handleSubmit}
-              className="register__link"
+              className="login__button"
             >
-              Зарегистрироваться
-            </button>
-          </div>
+              Войти
+            </button>          
         </form>
 
-        <div className="register__signin">
-          <p>Уже зарегистрированы?</p>
-          <Link to="login" className="register__login-link">
+        <div className="login__signup">
+          <p>Уже зарегестрированны?</p>
+          <Link to="/login" className="signup__link">
             Войти
           </Link>
         </div>

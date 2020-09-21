@@ -4,33 +4,30 @@ import * as auth from "../auth.js";
 import "./login.css";
 
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: "",
+  state = {
+      email: "",
       password: ""
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleChange(e) {
+    };    
+  
+  handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({
       [name]: value
     });
   }
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
-    if (!this.state.username || !this.state.password) {
+    if (!this.state.email || !this.state.password) {
       return;
     }
     auth
-      .authorize(this.state.username, this.state.password)
+      .authorize(this.state.email, this.state.password)
       .then((data) => {
-        if (data.jwt) {
+        console.log(data)
+        if (data.token) {
           this.setState({ email: "", password: "" }, () => {
-            this.props.handleLogin(data.user.ru_cal_goal.calGoal);
-            this.props.history.push("/diary");
+            this.props.handleLogin();
+            this.props.history.push("/");
           });
         }
       })
@@ -39,35 +36,37 @@ class Login extends React.Component {
   render() {
     return (
       <div className="login">
-        <p className="login__welcome">Добро пожаловать!</p>
+        <p className="login__welcome">Вход</p>
         <form onSubmit={this.handleSubmit} className="login__form">
-          <label for="username">Логин:</label>
+          
           <input
             required
-            id="username"
-            name="username"
-            type="text"
+            id="email"
+            name="email"
+            type="email"            
+            placeholder='Email'
             value={this.state.username}
             onChange={this.handleChange}
           />
-          <label for="password">Пароль:</label>
+          
           <input
             required
             id="password"
             name="password"
             type="password"
+            placeholder='Пароль'
             value={this.state.password}
             onChange={this.handleChange}
           />
-          <div className="login__button-container">
+          
             <button
               type="submit"
               onSubmit={this.handleSubmit}
-              className="login__link"
+              className="login__button"
             >
               Войти
             </button>
-          </div>
+          
         </form>
 
         <div className="login__signup">

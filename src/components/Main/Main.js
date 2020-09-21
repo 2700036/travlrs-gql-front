@@ -4,6 +4,7 @@ import {CurrentUserContext} from './../currentUserContext/CurrentUserContext';
 import { Route, NavLink } from 'react-router-dom';
 import FriendCard from '../FriendCard/FriendCard';
 import WelcomeScreen from '../WelcomeScreen/WelcomeScreen';
+import withProtectedRoute from '../hoc-helpers/withProtectedRoute';
 
 
 const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, cards, users}) => {
@@ -113,4 +114,4 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
   
 }
 
-export default Main;
+export default withProtectedRoute(Main);

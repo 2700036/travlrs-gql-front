@@ -14,6 +14,7 @@
 @import url('./__error/_visible/popup__error_visible.css');
 @import url('./_type/popup_type_remove-card.css');
 @import url('./_type/popup_type_edit-avatar.css');
+@import url('./_type/popup_type_tooltip.css');
 
 .popup {
   font-family: 'Inter', Arial, sans-serif;
