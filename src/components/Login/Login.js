@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
 import * as auth from "../auth.js";
 import "./login.css";
 
@@ -22,19 +22,22 @@ class Login extends React.Component {
     }
     auth
       .authorize(this.state.email, this.state.password)
-      .then((data) => {
-        console.log(data)
+      .then((data) => {        
         if (data.token) {
           this.setState({ email: "", password: "" }, () => {
             this.props.handleLogin();
             this.props.history.push("/");
           });
+        } else {
+          this.props.setAuthStatus({error: data.message});
+            this.props.openLoginStatusPopup();
         }
       })
       .catch((err) => console.log(err));
   }
   render() {
-    return (
+    return this.props.loggedIn ? <Redirect to='/' /> :
+    (
       <div className="login">
         <p className="login__welcome">Вход</p>
         <form onSubmit={this.handleSubmit} className="login__form">

@@ -28,6 +28,7 @@ const App = ({history}) => {
     userDescription: '',
     userAvatar: '',
     userId: '',
+    userEmail: ''
   });
   const [cards, setCards] = React.useState([]);
   const [users, setUsers] = React.useState([]);
@@ -36,17 +37,23 @@ const App = ({history}) => {
     // currentSession()
     if (localStorage.getItem("jwt")) {
       const jwt = localStorage.getItem("jwt");      
-      auth.checkToken(jwt).then((res) => {
+      auth.checkToken(jwt).then(({data}) => {
+        setUserInfo(info=>{          
+          return {
+            ...info, userEmail: data.email
+          }
+        })
         setLoggedIn(true); 
     Promise.all([api.getUserInfo(), api.getCardList(), api.getUsers()])
       .then((res) => {
         const [{ name, about, avatar, _id }, cardsData, users] = res;
-        setUserInfo({
+        setUserInfo(info=>({
+          ...info,
           userName: name,
           userDescription: about,
           userAvatar: avatar,
           userId: _id,
-        });
+        }));
         setCards(
           cardsData.filter((card) => {
             if (card.owner._id === _id) {
@@ -138,13 +145,20 @@ const App = ({history}) => {
     <CurrentUserContext.Provider value={userInfo}>
       <CardsContext.Provider value={setCards}>
         
-          <Header />
+          <Header handleLogout={()=>setLoggedIn(false)} 
+          isLoggedIn={loggedIn}
+          userEmail={userInfo.userEmail}
+          />
           <Switch>
             <Route path='/register'>
               <Register setAuthStatus={setAuthStatus} openLoginStatusPopup={openLoginStatusPopup} />
             </Route>
             <Route path='/login'>
-              <Login handleLogin={() => setLoggedIn(true)} />
+              <Login 
+              loggedIn={loggedIn}
+              handleLogin={() => setLoggedIn(true)}
+              setAuthStatus={setAuthStatus} openLoginStatusPopup={openLoginStatusPopup}
+              />
             </Route>
             {(cards.length && 
               <Main

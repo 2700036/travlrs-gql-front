@@ -49,9 +49,22 @@
   .signup__link {
     color: white;
   }
+  .signout__link {
+    color: #A9A9A9;
+    margin-left: 10px;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
   header .signup__link {
-    color: white;
+    color: #A9A9A9;
     margin-left: auto;
+    transition: color 0.5s ease
+  }
+  header .signout__link:hover, .signup__link:hover {
+    color: #fff;
+    
   }
  
   .login__button {
@@ -73,4 +86,7 @@
   .login__button:hover {
     background: rgb(184, 184, 184);
   }
-  
+  .header__email {
+    color: white;
+    margin-left: auto;
+  }
