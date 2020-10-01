@@ -24,11 +24,16 @@ class Register extends React.Component {
           this.state.password,
           this.state.name          
         )
-        .then((res) => {
+        .then((res) => {          
           if (res) {            
             this.props.setAuthStatus(res);
             this.props.openLoginStatusPopup();
-            this.props.history.push("/login");
+            auth.authorize(this.state.email,
+              this.state.password)
+              .then(res=>{
+                console.log(res)
+                this.props.history.push("/");
+              })
           } else {
             console.log("Произошла ошибка.");
           }
@@ -74,7 +79,7 @@ class Register extends React.Component {
               onSubmit={this.handleSubmit}
               className="login__button"
             >
-              Войти
+              Регистрируюсь
             </button>          
         </form>
 

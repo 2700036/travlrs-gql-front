@@ -72,8 +72,7 @@ class Login extends React.Component {
           
         </form>
 
-        <div className="login__signup">
-          <p>Ещё не зарегистрированы?</p>
+        <div className="login__signup">          
           <Link to="/register" className="signup__link">
             Зарегистрироваться
           </Link>

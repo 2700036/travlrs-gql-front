@@ -9,6 +9,8 @@
     margin: auto;
     height: 450px;
     width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
   }
   .login__welcome {
     font-size: 24px;

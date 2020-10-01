@@ -19,6 +19,7 @@ export const register = (email, password, name) => {
     .catch((err) => console.log(err));
 };
 export const authorize = (email, password) => {
+  console.log(email, password)
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
     headers: {
@@ -51,5 +52,14 @@ export const checkToken = (token) => {
     }
   })
     .then((res) => res.json())
-    .then((data) => data);
+    .then(res=>{
+      if(!res.message){
+        return res
+      };
+      throw res.message 
+    })
+    .catch((err)=>{
+      console.log(err);
+      throw err
+    })
 };

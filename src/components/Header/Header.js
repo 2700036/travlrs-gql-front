@@ -3,7 +3,6 @@ import logo from '../../images/logo.ico';
 import { Route, Link, useHistory } from 'react-router-dom'
 
 const Header = ({handleLogout, isLoggedIn, userEmail}) => {
-  console.log(userEmail)
   const history = useHistory();
   function signOut() {
     localStorage.removeItem("jwt");

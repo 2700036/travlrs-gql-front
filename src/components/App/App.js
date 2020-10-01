@@ -34,46 +34,40 @@ const App = ({history}) => {
   const [users, setUsers] = React.useState([]);
 
   React.useEffect(() => {
-    // currentSession()
-    if (localStorage.getItem("jwt")) {
-      const jwt = localStorage.getItem("jwt");      
-      auth.checkToken(jwt).then(({data}) => {
+    const jwt = localStorage.getItem("jwt");
+    console.log('jwt', jwt);
+    if (jwt) {            
+      auth.checkToken(jwt).then(res => {
         setUserInfo(info=>{          
           return {
-            ...info, userEmail: data.email
+            ...info,
+          userName: res.name,
+          userDescription: res.about,
+          userAvatar: res.avatar,
+          userId: res._id, 
+          userEmail: res.email
           }
         })
         setLoggedIn(true); 
-    Promise.all([api.getUserInfo(), api.getCardList(), api.getUsers()])
-      .then((res) => {
-        const [{ name, about, avatar, _id }, cardsData, users] = res;
-        setUserInfo(info=>({
-          ...info,
-          userName: name,
-          userDescription: about,
-          userAvatar: avatar,
-          userId: _id,
-        }));
-        setCards(
-          cardsData.filter((card) => {
-            if (card.owner._id === _id) {
-              return card;
-            }
-            if (card.likes.length > 2) {
-              return card;
-            }
-          })
-        );
+    Promise.all([api.getCardList(), api.getUsers()])
+      .then((res) => {        
+        const [cardsData, users] = res;
+        console.log(cardsData)        
+        setCards(cardsData);
         setUsers(users);
       })
       .catch((err) => {
         console.log(err);
       });
-    }).catch(err => console.log(err))
+    }).catch(err => {
+      console.log(err);
+      setAuthStatus({message: err});
+      openLoginStatusPopup()
+    })
   } else {
     history.push('/login')
   }
-  }, [loggedIn]);
+  }, [localStorage.getItem("jwt")]);
 
   const onDeleteCardSubmit = (e) => {
     e.preventDefault();
@@ -91,8 +85,14 @@ const App = ({history}) => {
 
   const onAddCardSubmit = ({ name, link }) => {
     api.addCard({ name, link }).then((card) => {
+      console.log(card)
       setCards([card, ...cards]);
       closeAllPopups();
+    })
+    .catch(err=> {
+      setAuthStatus({message: 'Что-то пошло не так...'});
+      openLoginStatusPopup()
+      console.log(err) 
     });
   };
 
@@ -160,7 +160,7 @@ const App = ({history}) => {
               setAuthStatus={setAuthStatus} openLoginStatusPopup={openLoginStatusPopup}
               />
             </Route>
-            {(cards.length && 
+            {(userInfo && 
               <Main
                 path='/'
                 loggedIn={loggedIn}

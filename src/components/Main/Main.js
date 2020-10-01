@@ -12,7 +12,8 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
   const {userName, userDescription, userAvatar, userId} = useContext(CurrentUserContext);
   
 
-  const cardsElems = cards.map((card)=>{  
+  const cardsElems = cards.map((card)=>{ 
+     
     const isLiked = card.likes.some(({_id})=>userId===_id);
     return <Card 
     userId={userId}

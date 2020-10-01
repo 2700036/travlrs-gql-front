@@ -4,8 +4,8 @@ import success from '../../images/success.png';
 import failed from '../../images/failed.png';
 
 const InfoTooltip = ({status}) => {
-  
-  if(status.data){
+  console.log(status)
+  if(status.name){
     return (
       <>
     <img src={success}/>
@@ -16,7 +16,7 @@ const InfoTooltip = ({status}) => {
     return (
       <>
     <img src={failed}/>
-    <p>{status.error}</p>
+    <p>{status.message}</p>
     </>
     )
   }

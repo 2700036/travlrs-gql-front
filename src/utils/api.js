@@ -15,7 +15,8 @@ class Api {
         authorization: localStorage.getItem("jwt")
       }
     })
-      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))      
+      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+      .then(res=>res.reverse())      
       .catch(err => console.log(`Загрузка карточек: ${err}`))
   }
 
@@ -43,8 +44,11 @@ class Api {
         link
       })
     })
-      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))      
-      .catch(err => console.log(`Добавление карточки: ${err}`));
+      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))  
+      .then(res=>res[0])    
+      .catch(err => {console.log(`Добавление карточки: ${err}`);
+    throw err;
+    });
   }
 
   removeCard(cardID) {
@@ -111,6 +115,7 @@ class Api {
       }
     })
       .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+      .then(res=>res[0])
       .catch(err => console.log(`Изменения статуса лайка: ${err}`));
   }
 }

@@ -18,8 +18,10 @@ const Card = ({cardInfo: {name, link, likes, _id}, onBasketClick, isUsersCard, i
 
   const handleLike = (cardId, like) => {
     api.changeLikeCardStatus(cardId, like)
-    .then(res=>{      
+    .then(res=>{ 
+      console.log(res.likes.length, res)     
       setLikesLength(res.likes.length);
+      console.log(likesLength)
       setIsLiked(!isLiked); 
       setCards(cards=>{
         const newCards = JSON.parse(JSON.stringify(cards));        
