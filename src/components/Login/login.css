@@ -92,3 +92,12 @@
     color: white;
     margin-left: auto;
   }
+
+  @media screen and (max-width: 568px) {
+    .signout__link {
+      margin-left: auto;
+    }
+    .header__email{
+      display: none;
+    }
+  }

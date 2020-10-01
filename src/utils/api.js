@@ -1,4 +1,4 @@
-import { renderLoading } from "./utils.js";
+
 
 class Api {
   constructor({ address}) {    
@@ -30,8 +30,7 @@ class Api {
       .catch(err => console.log(`Загрузка друзей: ${err}`))
   }
 
-  addCard({ name, link }) {
-    // renderLoading(true);
+  addCard({ name, link }) {    
 
     return fetch(`${this._address}/cards`, {
       method: 'POST',
@@ -105,8 +104,6 @@ class Api {
   }
 
   changeLikeCardStatus(cardID, like) {
-    
-    // Обычная реализация: 2 разных метода для удаления и постановки лайка.
     return fetch(`${this._address}/cards/likes/${cardID}`, {
       method: like ? 'PUT' : 'DELETE',
       headers: {
@@ -125,8 +122,3 @@ const api = new Api({
 })
 
 export default api;
-
-
-// address: 'https://praktikum.tk',
-//   groupId: `cohort0`,
-//   token: `80a75492-21c5-4330-a02f-308029e94b63`,
