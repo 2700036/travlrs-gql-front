@@ -33,10 +33,11 @@ const App = ({history}) => {
   const [cards, setCards] = React.useState([]);
   const [users, setUsers] = React.useState([]);
 
-  React.useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-    console.log('jwt', jwt);
-    if (jwt) {            
+  console.log(123)
+  const loginCheck = () => {
+    const jwt = localStorage.getItem("jwt");    
+    if (jwt) { 
+
       auth.checkToken(jwt).then(res => {
         setUserInfo(info=>{          
           return {
@@ -51,8 +52,7 @@ const App = ({history}) => {
         setLoggedIn(true); 
     Promise.all([api.getCardList(), api.getUsers()])
       .then((res) => {        
-        const [cardsData, users] = res;
-        console.log(cardsData)        
+        const [cardsData, users] = res;               
         setCards(cardsData);
         setUsers(users);
       })
@@ -65,8 +65,12 @@ const App = ({history}) => {
       openLoginStatusPopup()
     })
   } else {
-    history.push('/login')
+      history.push('/login')
+    }
   }
+
+  React.useEffect(() => {
+    loginCheck();  
   }, [localStorage.getItem("jwt")]);
 
   const onDeleteCardSubmit = (e) => {
@@ -181,10 +185,12 @@ const App = ({history}) => {
             <Route
               path='/cards/:id'
               render={({ match, history }) => {
+
                 const id = match.params.id;
                 const currentCard = cards.find(({ _id }) => id === _id);
-                return (
-                  currentCard && <ImagePopup card={currentCard} onClose={() => history.push('/cards/')} />
+                console.log(currentCard)
+                return (                  
+                  (currentCard && <ImagePopup card={currentCard} onClose={() => history.push('/cards/')}/>) || <Spinner/>  
                 );
               }}
             />
@@ -194,7 +200,7 @@ const App = ({history}) => {
                 const id = match.params.id;
                 const currentUser = users.find(({ _id }) => id === _id);
                 return (
-                  currentUser && <ImagePopup card={currentUser} onClose={() => history.push('/friends/')} />
+                  (currentUser && <ImagePopup card={currentUser} onClose={() => history.push('/friends/')} />) || <Spinner/>
                 );
               }}
             />
@@ -204,7 +210,7 @@ const App = ({history}) => {
                 const id = match.params.id;
                 const currentCard = cards.find(({ _id }) => id === _id);
                 return (
-                  currentCard && <ImagePopup card={currentCard} onClose={() => history.push('/favorite/')} />
+                  (currentCard && <ImagePopup card={currentCard} onClose={() => history.push('/favorite/')} />) || <Spinner/>
                 );
               }}
             />
