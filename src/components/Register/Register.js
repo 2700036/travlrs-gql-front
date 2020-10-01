@@ -7,7 +7,8 @@ class Register extends React.Component {
   
   state = {      
       email: "",
-      password: ""      
+      password: "",
+      name: ""     
     };    
   handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,7 +21,8 @@ class Register extends React.Component {
       auth
         .register(          
           this.state.email,
-          this.state.password          
+          this.state.password,
+          this.state.name          
         )
         .then((res) => {
           if (res) {            
@@ -38,14 +40,23 @@ class Register extends React.Component {
       <div className="login">
         <p className="login__welcome">Регистрация</p>
         <form onSubmit={this.handleSubmit} className="login__form">
-          
+        <input
+            required
+            id="name"
+            name="name"
+            type="text"            
+            placeholder='Имя'
+            minLength='2'
+            value={this.state.name}
+            onChange={this.handleChange}
+          />
           <input
             required
             id="email"
             name="email"
             type="email"            
             placeholder='Email'
-            value={this.state.username}
+            value={this.state.email}
             onChange={this.handleChange}
           />
           

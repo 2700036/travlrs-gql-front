@@ -1,13 +1,8 @@
 import { renderLoading } from "./utils.js";
 
 class Api {
-  constructor({ address, token, groupId }) {
-    // стандартная реализация -- объект options
-    this._token = token;
-    this._groupId = groupId;
+  constructor({ address}) {    
     this._address = address;
-
-    // Запросы в примере работы выполняются к старому Api, в новом URL изменены.
   }
 
   getAppInfo() {
@@ -15,9 +10,9 @@ class Api {
   }
 
   getCardList() {
-    return fetch(`${this._address}/${this._groupId}/cards`, {
+    return fetch(`${this._address}/cards`, {
       headers: {
-        authorization: this._token
+        authorization: localStorage.getItem("jwt")
       }
     })
       .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))      
@@ -25,9 +20,9 @@ class Api {
   }
 
   getUsers() {
-    return fetch(`${this._address}/${this._groupId}/users`, {
+    return fetch(`${this._address}/users`, {
       headers: {
-        authorization: this._token
+        authorization: localStorage.getItem("jwt")
       }
     })
       .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
@@ -37,10 +32,10 @@ class Api {
   addCard({ name, link }) {
     // renderLoading(true);
 
-    return fetch(`${this._address}/${this._groupId}/cards`, {
+    return fetch(`${this._address}/cards`, {
       method: 'POST',
       headers: {
-        authorization: this._token,
+        authorization: localStorage.getItem("jwt"),
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -53,20 +48,20 @@ class Api {
   }
 
   removeCard(cardID) {
-    return fetch(`${this._address}/${this._groupId}/cards/${cardID}`, {
+    return fetch(`${this._address}/cards/${cardID}`, {
       method: 'DELETE',
       headers: {
-        authorization: this._token,
+        authorization: localStorage.getItem("jwt"),
       }
     })
       .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
       .catch(err => console.log(`При удалении карточки: ${err}`));
   }
 
-  getUserInfo() {
-    return fetch(`${this._address}/${this._groupId}/users/me`, {
+  getUserInfo() { 
+    return fetch(`${this._address}/users/me`, {
       headers: {
-        authorization: this._token
+        authorization: localStorage.getItem("jwt")
       }
     })
       .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
@@ -74,10 +69,10 @@ class Api {
   }
 
   setUserInfo({ name, about }) {
-    return fetch(`${this._address}/${this._groupId}/users/me`, {
+    return fetch(`${this._address}/users/me`, {
       method: 'PATCH',
       headers: {
-        authorization: this._token,
+        authorization: localStorage.getItem("jwt"),
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -90,12 +85,11 @@ class Api {
   }
 
   setUserAvatar({ avatar }) {
-    // renderLoading(true);
-
-    return fetch(`${this._address}/${this._groupId}/users/me/avatar`, {
+    
+    return fetch(`${this._address}/users/me/avatar`, {
       method: 'PATCH',
       headers: {
-        authorization: this._token,
+        authorization: localStorage.getItem("jwt"),
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -109,10 +103,10 @@ class Api {
   changeLikeCardStatus(cardID, like) {
     
     // Обычная реализация: 2 разных метода для удаления и постановки лайка.
-    return fetch(`${this._address}/${this._groupId}/cards/like/${cardID}`, {
+    return fetch(`${this._address}/cards/likes/${cardID}`, {
       method: like ? 'PUT' : 'DELETE',
       headers: {
-        authorization: this._token,
+        authorization: localStorage.getItem("jwt"),
         'Content-Type': 'application/json'
       }
     })
@@ -122,9 +116,7 @@ class Api {
 }
 
 const api = new Api({
-  address: 'https://nomoreparties.co',
-  groupId: `cohort9`,
-  token: `0f96e3cb-2b6c-4da4-8233-9011a7d4981c`,
+  address: 'https://travlrsapi.herokuapp.com'
 })
 
 export default api;
