@@ -2,11 +2,18 @@ import React from 'react';
 import logo from '../../images/logo.ico';
 import { Route, Link, useHistory } from 'react-router-dom'
 
-const Header = ({handleLogout, isLoggedIn, userEmail}) => {
+const Header = ({handleLogout, isLoggedIn, userEmail, clearUserInfo}) => {
   const history = useHistory();
   function signOut() {
     localStorage.removeItem("jwt");
     handleLogout();
+    clearUserInfo({
+      userName: '',
+    userDescription: '',
+    userAvatar: '',
+    userId: '',
+    userEmail: ''
+    })
     history.push("/login");
   }
   return (

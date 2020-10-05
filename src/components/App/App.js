@@ -33,7 +33,6 @@ const App = ({history}) => {
   const [cards, setCards] = React.useState([]);
   const [users, setUsers] = React.useState([]);
 
-  console.log(123)
   const loginCheck = () => {
     const jwt = localStorage.getItem("jwt");    
     if (jwt) { 
@@ -71,7 +70,7 @@ const App = ({history}) => {
 
   React.useEffect(() => {
     loginCheck();  
-  }, [localStorage.getItem("jwt")]);
+  }, [loggedIn]);
 
   const onDeleteCardSubmit = (e) => {
     e.preventDefault();
@@ -152,6 +151,7 @@ const App = ({history}) => {
           <Header handleLogout={()=>setLoggedIn(false)} 
           isLoggedIn={loggedIn}
           userEmail={userInfo.userEmail}
+          clearUserInfo={setUserInfo}
           />
           <Switch>
             <Route path='/register'>
