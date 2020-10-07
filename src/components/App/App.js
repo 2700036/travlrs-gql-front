@@ -64,7 +64,7 @@ const App = ({history}) => {
       openLoginStatusPopup()
     })
   } else {
-      history.push('/login')
+      // history.push('/login')
     }
   }
 
