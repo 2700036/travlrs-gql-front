@@ -17,10 +17,13 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import * as auth from "../auth";
+import { useActions } from '../../reducers/useActions';
 
 const App = ({history}) => {
-  const [loggedIn, setLoggedIn] = React.useState(false);
-  const [authStatus, setAuthStatus] = React.useState(null);
+  const {loggedIn, authStatus} = useSelector(({ app }) => app);
+  const {updateUserInfo, logIn, updateAuthStatus} = useActions();
+
+ 
   const [openedPopup, setOpenedPopup] = React.useState({});
   const [selectedCard, setSelectedCard] = React.useState(null);
   const [userInfo, setUserInfo] = React.useState({
@@ -38,17 +41,14 @@ const App = ({history}) => {
     if (jwt) { 
 
       auth.checkToken(jwt).then(res => {
-        setUserInfo(info=>{          
-          return {
-            ...info,
+        updateUserInfo({          
           userName: res.name,
           userDescription: res.about,
           userAvatar: res.avatar,
           userId: res._id, 
           userEmail: res.email
-          }
-        })
-        setLoggedIn(true); 
+          });
+          logIn(); 
     Promise.all([api.getCardList(), api.getUsers()])
       .then((res) => {        
         const [cardsData, users] = res;               
@@ -60,8 +60,7 @@ const App = ({history}) => {
       });
     }).catch(err => {
       console.log(err);
-      setAuthStatus({message: err});
-      openLoginStatusPopup()
+      updateAuthStatus({message: err});      
     })
   } else {
       // history.push('/login')
@@ -93,8 +92,7 @@ const App = ({history}) => {
       closeAllPopups();
     })
     .catch(err=> {
-      setAuthStatus({message: 'Что-то пошло не так...'});
-      openLoginStatusPopup()
+      updateAuthStatus({message: 'Что-то пошло не так...'});      
       console.log(err) 
     });
   };
@@ -148,20 +146,20 @@ const App = ({history}) => {
     <CurrentUserContext.Provider value={userInfo}>
       <CardsContext.Provider value={setCards}>
         
-          <Header handleLogout={()=>setLoggedIn(false)} 
+          <Header  
           isLoggedIn={loggedIn}
           userEmail={userInfo.userEmail}
           clearUserInfo={setUserInfo}
           />
           <Switch>
             <Route path='/register'>
-              <Register setAuthStatus={setAuthStatus} openLoginStatusPopup={openLoginStatusPopup} />
+              <Register setAuthStatus={updateAuthStatus} openLoginStatusPopup={openLoginStatusPopup} />
             </Route>
             <Route path='/login'>
               <Login 
               loggedIn={loggedIn}
-              handleLogin={() => setLoggedIn(true)}
-              setAuthStatus={setAuthStatus} openLoginStatusPopup={openLoginStatusPopup}
+              handleLogin={logIn}
+              setAuthStatus={updateAuthStatus}
               />
             </Route>
             {(userInfo && 

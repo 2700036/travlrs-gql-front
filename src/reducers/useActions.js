@@ -1,32 +1,32 @@
 /* eslint-disable no-unused-vars */
 import { useDispatch, useSelector } from "react-redux";
 
-
-export const LOGGED_IN = "LOGGED_IN";
-export const LOGGED_OUT = "LOGGED_OUT";
+export const LOG_IN = "LOG_IN";
+export const LOG_OUT = "LOG_OUT";
 export const UPDATE_AUTH_STATUS = "UPDATE_AUTH_STATUS";
 export const OPEN_EDIT_PROFILE_POPUP = "OPEN_EDIT_PROFILE_POPUP";
 export const OPEN_ADD_PLACE_POPUP = "OPEN_ADD_PLACE_POPUP";
 export const OPEN_EDIT_AVATAR_POPUP = "OPEN_EDIT_AVATAR_POPUP";
 export const OPEN_DELETE_CARD_CONFIRM_POPUP = "OPEN_DELETE_CARD_CONFIRM_POPUP";
+// export const OPEN_LOGIN_STATUS_POPUP = "OPEN_LOGIN_STATUS_POPUP";
 export const CLOSE_POPUPS = "CLOSE_POPUPS";
 export const UPDATE_USERINFO = "UPDATE_USERINFO";
 
 export function useActions() {
   const dispatch = useDispatch();
-  const userInfo = useSelector(({userInfo}) => userInfo);
+  const userInfo = useSelector(({ app }) => app.userInfo);
 
-  const loggedIn = () =>
+  const logIn = () =>
     dispatch({
-      type: LOGGED_IN
+      type: LOG_IN
     });
-  const loggedOut = () =>
+  const logOut = () =>
     dispatch({
-      type: LOGGED_OUT
+      type: LOG_OUT
     });
   const updateAuthStatus = payload =>
     dispatch({
-      type: LOGGED_OUT,
+      type: UPDATE_AUTH_STATUS,
       payload
     });
   const openEditProfilePopup = () => {
@@ -50,6 +50,10 @@ export function useActions() {
       payload
     });
   };
+//   const openLoginStatusPopup = () =>
+//     dispatch({
+//       type: OPEN_LOGIN_STATUS_POPUP
+//     });
   const closePopups = () => {
     dispatch({
       type: CLOSE_POPUPS
@@ -58,18 +62,19 @@ export function useActions() {
   const updateUserInfo = payload => {
     dispatch({
       type: UPDATE_USERINFO,
-      payload: {...userInfo, ...payload}
+      payload: { ...userInfo, ...payload }
     });
   };
 
   return {
-    loggedIn,
-    loggedOut,
+    logIn,
+    logOut,
     updateAuthStatus,
     openEditProfilePopup,
     openAddPlacePopup,
     openEditAvatarPopup,
     openDeleteCardConfirmPopup,
+    // openLoginStatusPopup,
     closePopups,
     updateUserInfo
   };

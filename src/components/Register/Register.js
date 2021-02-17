@@ -28,7 +28,7 @@ class Register extends React.Component {
           console.log(123)          
           if (res) {            
             this.props.setAuthStatus(res);
-            this.props.openLoginStatusPopup();
+            
             auth.authorize(this.state.email,
               this.state.password)
               .then(res=>{

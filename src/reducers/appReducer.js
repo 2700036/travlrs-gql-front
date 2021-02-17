@@ -1,6 +1,6 @@
 import {
-  LOGGED_IN,
-  LOGGED_OUT,
+  LOG_IN,
+  LOG_OUT,
   UPDATE_AUTH_STATUS,
   OPEN_EDIT_PROFILE_POPUP,
   OPEN_ADD_PLACE_POPUP,
@@ -16,7 +16,9 @@ const initialState = {
   openedPopup: {
     isEditProfilePopupOpen: false,
     isAddPlacePopupOpen: false,
-    isEditAvatarPopupOpen: false
+    isEditAvatarPopupOpen: false,
+    isDeleteCardPopupOpened: false,
+    isLoginStatusPopupOpen: false
   },
   selectedCard: false,
   userInfo: {
@@ -32,12 +34,15 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case LOGGED_IN:
+    case LOG_IN:
       return { ...state, loggedIn: true };
-    case LOGGED_OUT:
+    case LOG_OUT:
       return { ...state, loggedIn: true };
     case UPDATE_AUTH_STATUS:
-      return { ...state, authStatus: payload };
+      return { ...state, 
+        authStatus: payload,
+        openedPopup: { isLoginStatusPopupOpen: true }        
+    };
     case OPEN_EDIT_PROFILE_POPUP:
       return { ...state, openedPopup: { isEditProfilePopupOpen: true } };
     case OPEN_ADD_PLACE_POPUP:

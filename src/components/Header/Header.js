@@ -1,13 +1,15 @@
 import React from 'react';
 import logo from '../../images/logo.ico';
 import { Route, Link, useHistory } from 'react-router-dom'
+import { useActions } from '../../reducers/useActions';
 
-const Header = ({handleLogout, isLoggedIn, userEmail, clearUserInfo}) => {
+const Header = ({isLoggedIn, userEmail}) => {
+  const {logOut, updateUserInfo} = useActions();
   const history = useHistory();
   function signOut() {
     localStorage.removeItem("jwt");
-    handleLogout();
-    clearUserInfo({
+    logOut();
+    updateUserInfo({
       userName: '',
     userDescription: '',
     userAvatar: '',

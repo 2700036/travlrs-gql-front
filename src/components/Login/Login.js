@@ -30,7 +30,7 @@ class Login extends React.Component {
           });
         } else {
           this.props.setAuthStatus({error: data.message});
-            this.props.openLoginStatusPopup();
+            
         }
       })
       .catch((err) => console.log(err));
