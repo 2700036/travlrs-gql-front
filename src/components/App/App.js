@@ -3,15 +3,12 @@ import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
 import ImagePopup from '../ImagePopup/ImagePopup';
-import PopupWithForm from '../PopupWithForm/PopupWithForm';
-import EditForm from '../EditForm/EditForm';
-import PlaceForm from '../PlaceForm/PlaceForm';
 import { BrowserRouter as Router, Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { CurrentUserContext } from './../currentUserContext/CurrentUserContext';
 import api from './../../utils/api';
 import './app.css';
 import { CardsContext } from '../CardsContext/CardsContext';
-import EditAvatar from '../EditAvatar/EditAvatar';
+
 import Spinner from '../Spinner/Spinner';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
@@ -25,11 +22,7 @@ const App = ({ history }) => {
   const {
     updateUserInfo,
     logIn,
-    updateAuthStatus,
-    openEditProfilePopup,
-    openAddPlacePopup,
-    openEditAvatarPopup,
-    openDeleteCardConfirmPopup,
+    updateAuthStatus,   
     closePopups,
   } = useActions();
 
@@ -103,26 +96,7 @@ const App = ({ history }) => {
 
  
 
-  const handleEditSubmit = (userInfo) => {
-    api.setUserInfo(userInfo).then(({ name, about }) => {
-      // const user = JSON.parse( localStorage.user );
-      // user.name = userInfo.name;
-      // user.about = userInfo.about;
-      // localStorage.setItem('user', JSON.stringify(user))
-      updateUserInfo({ userName: name, userDescription: about });
-      closePopups();
-    });
-  };
 
-  const onAvatarEditSubmit = (url) => {
-    api.setUserAvatar(url).then(({ avatar }) => {
-      // const user = JSON.parse( localStorage.user );
-      // user.avatar = url.avatar;
-      // localStorage.setItem('user', JSON.stringify(user))
-      updateUserInfo({ userAvatar: avatar });
-      closePopups();
-    });
-  };
 
   return (
     <CurrentUserContext.Provider value={userInfo}>
@@ -133,18 +107,11 @@ const App = ({ history }) => {
           <Route path='/login' component={Login} />            
           <Route path='/' >
             {loggedIn && userInfo ? (
-              <Main                
-                loggedIn={loggedIn}
+              <Main 
                 cards={cards}
-                users={users}
-                onEditProfile={openEditProfilePopup}
-                onAddPlace={openAddPlacePopup}
-                onEditAvatar={openEditAvatarPopup}
-                handleBasketIconClick={openDeleteCardConfirmPopup}
-                onDeleteCardSubmit={onDeleteCardSubmit}
-                onClose={closePopups}
+                users={users}                
+                onDeleteCardSubmit={onDeleteCardSubmit}                
                 onAddCardSubmit={onAddCardSubmit}
-                openedPopup={openedPopup}
               />
             ) : (
               <Redirect to='/login' />
@@ -190,39 +157,11 @@ const App = ({ history }) => {
           }}
         />
 
-        {openedPopup.isEditProfilePopupOpen && (
-          <EditForm
-            title='Редактировать профиль'
-            name='edit'
-            onClose={closePopups}
-            onSubmit={handleEditSubmit}
-          />
-        )}
         {openedPopup.isLoginStatusPopupOpen && (
           <InfoTooltip onClose={closePopups} name='tooltip' status={authStatus} />
-        )}
+          )}
 
-        {openedPopup.isAddPlacePopupOpen && (
-          <PopupWithForm title='Предложить место' name='new-card' onClose={closePopups}>
-            <PlaceForm onAddCardSubmit={onAddCardSubmit} />
-          </PopupWithForm>
-        )}
-
-        {openedPopup.isDeleteCardPopupOpened && (
-          <PopupWithForm title='Вы уверены?' name='remove-card' onClose={closePopups}>
-            <form className='popup__form' name='remove-card' noValidate>
-              <button type='submit' className='button popup__button' onClick={onDeleteCardSubmit}>
-                Да
-              </button>
-            </form>
-          </PopupWithForm>
-        )};
-
-        {openedPopup.isEditAvatarPopupOpen && (
-          <PopupWithForm title='Обновить аватар' name='edit-avatar' onClose={closePopups}>
-            <EditAvatar onAvatarEditSubmit={onAvatarEditSubmit} />
-          </PopupWithForm>
-        )}
+         
       </CardsContext.Provider>
     </CurrentUserContext.Provider>
   );

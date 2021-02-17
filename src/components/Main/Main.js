@@ -1,13 +1,48 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import Card from '../Card/Card';
-import {CurrentUserContext} from './../currentUserContext/CurrentUserContext';
+import PopupWithForm from '../PopupWithForm/PopupWithForm';
+import EditForm from '../EditForm/EditForm';
+import PlaceForm from '../PlaceForm/PlaceForm';
+import EditAvatar from '../EditAvatar/EditAvatar';
 import { Route, NavLink } from 'react-router-dom';
 import FriendCard from '../FriendCard/FriendCard';
 import WelcomeScreen from '../WelcomeScreen/WelcomeScreen';
 import { useSelector } from 'react-redux';
+import { useActions } from '../../reducers/useActions';
+import api from '../../utils/api';
 
-const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, cards, users}) => {
-  const { userInfo: {userName, userDescription, userAvatar, userId} } = useSelector(({ app }) => app);
+const Main = ({cards, users,onAddCardSubmit, onDeleteCardSubmit}) => {
+  const { userInfo: {userName, userDescription, userAvatar, userId}, openedPopup } = useSelector(({ app }) => app);
+  const {    
+    openEditProfilePopup,
+    openAddPlacePopup,
+    openEditAvatarPopup,
+    openDeleteCardConfirmPopup,
+    closePopups,
+    updateUserInfo
+  } = useActions();
+
+  const handleEditSubmit = (userInfo) => {
+    api.setUserInfo(userInfo).then(({ name, about }) => {
+      // const user = JSON.parse( localStorage.user );
+      // user.name = userInfo.name;
+      // user.about = userInfo.about;
+      // localStorage.setItem('user', JSON.stringify(user))
+      updateUserInfo({ userName: name, userDescription: about });
+      closePopups();
+    });
+  };
+
+  const onAvatarEditSubmit = (url) => {
+    api.setUserAvatar(url).then(({ avatar }) => {
+      // const user = JSON.parse( localStorage.user );
+      // user.avatar = url.avatar;
+      // localStorage.setItem('user', JSON.stringify(user))
+      updateUserInfo({ userAvatar: avatar });
+      closePopups();
+    });
+  };
+
   
   
 
@@ -18,7 +53,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
     cardInfo={card}
     onBasketClick={(e)=>{
       e.stopPropagation();
-      handleBasketIconClick(card)
+      openDeleteCardConfirmPopup(card)
     }}
     key={card._id}    
     isUsersCard={userId===card.owner._id}
@@ -44,7 +79,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
       cardInfo={card}
       onBasketClick={(e)=>{
         e.stopPropagation();
-        handleBasketIconClick(card)
+        openDeleteCardConfirmPopup(card)
       }}
       key={card._id}    
       isUsersCard={userId===card.owner._id}
@@ -58,7 +93,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
     <section className="profile page__section">
       <div 
       className="profile__image"
-      onClick={onEditAvatar}
+      onClick={openEditAvatarPopup}
       style={{backgroundImage: `url(${userAvatar})`}}
       ></div>
       <div className="profile__info">
@@ -66,14 +101,14 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
         <button 
         className="profile__edit-button" 
         type="button"
-        onClick={onEditProfile}
+        onClick={openEditProfilePopup}
         ></button>
         <p className="profile__description">{userDescription}</p>
       </div>
       <button 
       className="profile__add-button" 
       type="button"
-      onClick={onAddPlace}
+      onClick={openAddPlacePopup}
       ></button>
     </section>
     <div className='tabs page__section'>
@@ -107,7 +142,36 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
         }} />       
       </ul>
     </section>
-  </main>  
+  </main> 
+  {openedPopup.isEditProfilePopupOpen && (
+            <EditForm
+              title='Редактировать профиль'
+              name='edit'
+              onClose={closePopups}
+              onSubmit={handleEditSubmit}
+            />
+          )}
+        {openedPopup.isAddPlacePopupOpen && (
+          <PopupWithForm title='Предложить место' name='new-card' onClose={closePopups}>
+            <PlaceForm onAddCardSubmit={onAddCardSubmit} />
+          </PopupWithForm>
+        )}
+
+        {openedPopup.isDeleteCardPopupOpened && (
+          <PopupWithForm title='Вы уверены?' name='remove-card' onClose={closePopups}>
+            <form className='popup__form' name='remove-card' noValidate>
+              <button type='submit' className='button popup__button' onClick={onDeleteCardSubmit}>
+                Да
+              </button>
+            </form>
+          </PopupWithForm>
+        )};
+
+        {openedPopup.isEditAvatarPopupOpen && (
+          <PopupWithForm title='Обновить аватар' name='edit-avatar' onClose={closePopups}>
+            <EditAvatar onAvatarEditSubmit={onAvatarEditSubmit} />
+          </PopupWithForm>
+        )} 
   </>
     );
   
