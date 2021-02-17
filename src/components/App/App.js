@@ -216,7 +216,7 @@ const App = ({ history }) => {
               </button>
             </form>
           </PopupWithForm>
-        )}
+        )};
 
         {openedPopup.isEditAvatarPopupOpen && (
           <PopupWithForm title='Обновить аватар' name='edit-avatar' onClose={closePopups}>
