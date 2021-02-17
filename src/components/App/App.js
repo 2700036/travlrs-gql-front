@@ -18,6 +18,7 @@ import Register from '../Register/Register';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import * as auth from "../auth";
 import { useActions } from '../../reducers/useActions';
+import { useSelector } from 'react-redux';
 
 const App = ({history}) => {
   const {loggedIn, authStatus} = useSelector(({ app }) => app);
