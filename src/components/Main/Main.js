@@ -44,35 +44,8 @@ const Main = ({cards, users,onAddCardSubmit, onDeleteCardSubmit}) => {
   };
 
   
-  
-
-  const cardsElems = cards.map((card)=>{
-    const isLiked = card.likes.some(({_id})=>userId===_id);
-    return <Card 
-    userId={userId}
-    cardInfo={card}
-    onBasketClick={(e)=>{
-      e.stopPropagation();
-      openDeleteCardConfirmPopup(card)
-    }}
-    key={card._id}    
-    isUsersCard={userId===card.owner._id}
-    isInitialLiked={isLiked}
-    />
-  }); 
-  const friends = users.map((user)=>{  
-    
-    return <FriendCard 
-    cardInfo={user}    
-    key={user._id}    
-    isUsersCard={userId===user._id}    
-    />
-  });  
-  const sortFavorites = cards.filter((card)=>card.likes.some(({_id})=>userId===_id)).sort((a,b)=>{    
-    return b.likes.length - a.likes.length
-  });
-  
-  const favorites = sortFavorites.map((card)=>{
+  const makeListOfElements = (elements) => {
+    return elements.map((card)=>{
       const isLiked = card.likes.some(({_id})=>userId===_id);
       return <Card 
       userId={userId}
@@ -85,7 +58,21 @@ const Main = ({cards, users,onAddCardSubmit, onDeleteCardSubmit}) => {
       isUsersCard={userId===card.owner._id}
       isInitialLiked={isLiked}
       />
-    })
+    }); 
+  }
+
+  const sortedFavorites = cards.filter((card)=>card.likes.some(({_id})=>userId===_id)).sort((a,b)=>{    
+    return b.likes.length - a.likes.length
+  });
+  const cardsElems = makeListOfElements(cards)
+  const favorites = makeListOfElements(sortedFavorites)
+  const friends = users.map((user)=>{    
+    return <FriendCard 
+    cardInfo={user}    
+    key={user._id}    
+    isUsersCard={userId===user._id}    
+    />
+  });   
   
     return (
      <>
