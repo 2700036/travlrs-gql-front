@@ -21,13 +21,7 @@ const initialState = {
     isLoginStatusPopupOpen: false
   },
   selectedCard: false,
-  userInfo: {
-    userName: "",
-    userDescription: "",
-    userAvatar: "",
-    userId: "",
-    userEmail: ""
-  },
+  userInfo: null,
   cards: [],
   users: []
 };
@@ -37,7 +31,7 @@ export default (state = initialState, { type, payload }) => {
     case LOG_IN:
       return { ...state, loggedIn: true };
     case LOG_OUT:
-      return { ...state, loggedIn: true };
+      return { ...state, loggedIn: false, userInfo: null };
     case UPDATE_AUTH_STATUS:
       return { ...state, 
         authStatus: payload,

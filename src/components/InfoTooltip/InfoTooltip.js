@@ -2,10 +2,11 @@ import React from 'react';
 import withPopup from '../hoc-helpers/withPopup';
 import success from '../../images/success.png';
 import failed from '../../images/failed.png';
+import { useSelector } from 'react-redux';
 
-const InfoTooltip = ({status}) => {
-  console.log(status)
-  if(status.name){
+const InfoTooltip = () => {
+  const { authStatus } = useSelector(({ app }) => app);  
+  if(authStatus.name){
     return (
       <>
     <img src={success}/>
@@ -16,7 +17,7 @@ const InfoTooltip = ({status}) => {
     return (
       <>
     <img src={failed}/>
-    <p>{status.message}</p>
+    <p>{authStatus.message || authStatus.error}</p>
     </>
     )
   }

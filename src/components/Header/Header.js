@@ -4,18 +4,12 @@ import { Route, Link, useHistory } from 'react-router-dom'
 import { useActions } from '../../reducers/useActions';
 
 const Header = ({isLoggedIn, userEmail}) => {
-  const {logOut, updateUserInfo} = useActions();
+  const {logOut} = useActions();
   const history = useHistory();
   function signOut() {
     localStorage.removeItem("jwt");
     logOut();
-    updateUserInfo({
-      userName: '',
-    userDescription: '',
-    userAvatar: '',
-    userId: '',
-    userEmail: ''
-    })
+    
     history.push("/login");
   }
   return (

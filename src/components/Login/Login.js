@@ -1,46 +1,46 @@
-import React from "react";
-import { Link, withRouter, Redirect } from "react-router-dom";
+import React, {useState} from "react";
+import { Link, Redirect } from "react-router-dom";
 import * as auth from "../auth.js";
+import { useActions } from '../../reducers/useActions';
+import { useSelector } from 'react-redux';
 import "./login.css";
 
-class Login extends React.Component {
-  state = {
-      email: "",
-      password: ""
-    };    
+const Login = ({history}) => {
+  const { loggedIn, userInfo } = useSelector(({ app }) => app);
+  const { logIn, updateAuthStatus } = useActions();
+  const [userData, setUserData] = useState({
+    email: '',
+    password: ''    
+  });  
   
-  handleChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value
-    });
-  }
-  handleSubmit = (e) => {
+  const handleChange = ({ target: { name, value } }) => {
+    setUserData((userData) => ({ ...userData, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!this.state.email || !this.state.password) {
+    if (!userData.email || !userData.password) {
       return;
     }
     auth
-      .authorize(this.state.email, this.state.password)
+      .authorize(userData.email, userData.password)
       .then((data) => {        
         if (data.token) {
-          this.setState({ email: "", password: "" }, () => {
-            this.props.handleLogin();
-            this.props.history.push("/");
-          });
+          setUserData({ email: "", password: "" });
+          logIn();
+          history.push("/");          
         } else {
-          this.props.setAuthStatus({error: data.message});
-            
+          updateAuthStatus({error: data.message});            
         }
       })
       .catch((err) => console.log(err));
   }
-  render() {
-    return this.props.loggedIn ? <Redirect to='/' /> :
+  
+    return loggedIn && userInfo ? <Redirect to='/' /> :
     (
       <div className="login">
         <p className="login__welcome">Вход</p>
-        <form onSubmit={this.handleSubmit} className="login__form">
+        <form onSubmit={handleSubmit} className="login__form">
           
           <input
             required
@@ -48,8 +48,8 @@ class Login extends React.Component {
             name="email"
             type="email"            
             placeholder='Email'
-            value={this.state.username}
-            onChange={this.handleChange}
+            value={userData.username}
+            onChange={handleChange}
           />
           
           <input
@@ -58,13 +58,13 @@ class Login extends React.Component {
             name="password"
             type="password"
             placeholder='Пароль'
-            value={this.state.password}
-            onChange={this.handleChange}
+            value={userData.password}
+            onChange={handleChange}
           />
           
             <button
               type="submit"
-              onSubmit={this.handleSubmit}
+              onSubmit={handleSubmit}
               className="login__button"
             >
               Войти
@@ -79,7 +79,7 @@ class Login extends React.Component {
         </div>
       </div>
     );
-  }
+  
 }
 
-export default withRouter(Login);
+export default Login;

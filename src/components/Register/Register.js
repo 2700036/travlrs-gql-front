@@ -1,98 +1,80 @@
-import React from "react";
-import { Link, withRouter } from "react-router-dom";
-import * as auth from "../auth.js";
-import "../Login/login.css";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useActions } from '../../reducers/useActions.js';
+import * as auth from '../auth.js';
+import '../Login/login.css';
 
-class Register extends React.Component {
+const Register = ({history}) => {
   
-  state = {      
-      email: "",
-      password: "",
-      name: ""     
-    };    
-  handleChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value
-    });
-  };  
-  handleSubmit = (e) => {
-    e.preventDefault();   
-      auth
-        .register(          
-          this.state.email,
-          this.state.password,
-          this.state.name          
-        )
-        .then((res) => {
-          console.log(123)          
-          if (res) {            
-            this.props.setAuthStatus(res);
-            
-            auth.authorize(this.state.email,
-              this.state.password)
-              .then(res=>{
-                console.log(res)
-                this.props.history.push("/");
-              })
-          } else {
-            console.log("Произошла ошибка.");
-          }
-        });
-    
+  const { updateAuthStatus } = useActions();
+  const [userData, setUserData] = useState({
+    email: '',
+    password: '',
+    name: '',
+  });
+  const handleChange = ({ target: { name, value } }) => {
+    setUserData((userData) => ({ ...userData, [name]: value }));
   };
-  render() {
-    return (
-      <div className="login">
-        <p className="login__welcome">Регистрация</p>
-        <form onSubmit={this.handleSubmit} className="login__form">
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    auth.register(userData.email, userData.password, userData.name).then((res) => {
+      if (res) {
+        updateAuthStatus(res);
+        auth.authorize(userData.email, userData.password).then((res) => {
+          history.push('/');
+        });
+      } else {
+        console.log('Произошла ошибка.');
+      }
+    });
+  };
+
+  return (
+    <div className='login'>
+      <p className='login__welcome'>Регистрация</p>
+      <form onSubmit={handleSubmit} className='login__form'>
         <input
-            required
-            id="name"
-            name="name"
-            type="text"            
-            placeholder='Имя'
-            minLength='2'
-            value={this.state.name}
-            onChange={this.handleChange}
-          />
-          <input
-            required
-            id="email"
-            name="email"
-            type="email"            
-            placeholder='Email'
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
-          
-          <input
-            required
-            id="password"
-            name="password"
-            type="password"
-            placeholder='Пароль'
-            value={this.state.password}
-            onChange={this.handleChange}
-          />          
-            <button
-              type="submit"
-              onSubmit={this.handleSubmit}
-              className="login__button"
-            >
-              Регистрируюсь
-            </button>          
-        </form>
+          required
+          id='name'
+          name='name'
+          type='text'
+          placeholder='Имя'
+          minLength='2'
+          value={userData.name}
+          onChange={handleChange}
+        />
+        <input
+          required
+          id='email'
+          name='email'
+          type='email'
+          placeholder='Email'
+          value={userData.email}
+          onChange={handleChange}
+        />
 
-        <div className="login__signup">
-          <p>Уже зарегестрированны?</p>
-          <Link to="/login" className="signup__link">
-            Войти
-          </Link>
-        </div>
+        <input
+          required
+          id='password'
+          name='password'
+          type='password'
+          placeholder='Пароль'
+          value={userData.password}
+          onChange={handleChange}
+        />
+        <button type='submit' onSubmit={handleSubmit} className='login__button'>
+          Регистрируюсь
+        </button>
+      </form>
+
+      <div className='login__signup'>
+        <p>Уже зарегестрированны?</p>
+        <Link to='/login' className='signup__link'>
+          Войти
+        </Link>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default withRouter(Register);
+export default Register;

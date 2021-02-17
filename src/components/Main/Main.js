@@ -4,16 +4,14 @@ import {CurrentUserContext} from './../currentUserContext/CurrentUserContext';
 import { Route, NavLink } from 'react-router-dom';
 import FriendCard from '../FriendCard/FriendCard';
 import WelcomeScreen from '../WelcomeScreen/WelcomeScreen';
-import withProtectedRoute from '../hoc-helpers/withProtectedRoute';
-
+import { useSelector } from 'react-redux';
 
 const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, cards, users}) => {
+  const { userInfo: {userName, userDescription, userAvatar, userId} } = useSelector(({ app }) => app);
   
-  const {userName, userDescription, userAvatar, userId} = useContext(CurrentUserContext);
   
 
-  const cardsElems = cards.map((card)=>{ 
-     
+  const cardsElems = cards.map((card)=>{
     const isLiked = card.likes.some(({_id})=>userId===_id);
     return <Card 
     userId={userId}
@@ -39,7 +37,7 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
     return b.likes.length - a.likes.length
   });
   
-  const favorites = sortFavorites.map((card)=>{  
+  const favorites = sortFavorites.map((card)=>{
       const isLiked = card.likes.some(({_id})=>userId===_id);
       return <Card 
       userId={userId}
@@ -115,4 +113,4 @@ const Main = ({onEditProfile, onAddPlace, onEditAvatar, handleBasketIconClick, c
   
 }
 
-export default withProtectedRoute(Main);
+export default Main;
