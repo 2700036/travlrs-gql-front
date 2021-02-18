@@ -3,31 +3,22 @@ import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
 import ImagePopup from '../ImagePopup/ImagePopup';
-import { BrowserRouter as Router, Switch, Route, Redirect, withRouter } from 'react-router-dom';
-import { CurrentUserContext } from './../currentUserContext/CurrentUserContext';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import travlrsApi from './../../utils/travlrsApi';
-import './app.css';
-import { CardsContext } from '../CardsContext/CardsContext';
-
 import Spinner from '../Spinner/Spinner';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
-
 import { useActions } from '../../reducers/useActions';
+import { useCardsActions } from '../../reducers/useCardsActions';
 import { useSelector } from 'react-redux';
+import './app.css';
 
 const App = ({ history }) => {
   const { loggedIn, authStatus, userInfo, openedPopup, selectedCard } = useSelector(({ app }) => app);
-  const {
-    updateUserInfo,
-    logIn,
-    updateAuthStatus,   
-    closePopups,
-  } = useActions();
-
-  const [cards, setCards] = React.useState([]);
-  const [users, setUsers] = React.useState([]);
+  const { cards, users } = useSelector(({ cards }) => cards);
+  const { updateUserInfo, logIn, updateAuthStatus, closePopups } = useActions();
+  const { cardsFill, usersFill } = useCardsActions();
 
   const loginCheck = () => {
     const jwt = localStorage.getItem('jwt');
@@ -46,8 +37,8 @@ const App = ({ history }) => {
           Promise.all([travlrsApi.getCardList(), travlrsApi.getUsers()])
             .then((res) => {
               const [cardsData, users] = res;
-              setCards(cardsData);
-              setUsers(users);
+              cardsFill(cardsData);
+              usersFill(users);
             })
             .catch((err) => {
               console.log(err);
@@ -58,7 +49,7 @@ const App = ({ history }) => {
           updateAuthStatus({ message: err });
         });
     } else {
-      history.push('/login')
+      history.push('/login');
     }
   };
 
@@ -72,7 +63,7 @@ const App = ({ history }) => {
       .removeCard(selectedCard._id)
       .then((res) => {
         const ind = cards.findIndex((el) => el._id === selectedCard._id);
-        setCards([...cards.slice(0, ind), ...cards.slice(ind + 1)]);
+        cardsFill([...cards.slice(0, ind), ...cards.slice(ind + 1)]);
         closePopups();
       })
       .catch((err) => {
@@ -84,8 +75,7 @@ const App = ({ history }) => {
     travlrsApi
       .addCard({ name, link })
       .then((card) => {
-        console.log(card);
-        setCards([card, ...cards]);
+        cardsFill([card, ...cards]);
         closePopups();
       })
       .catch((err) => {
@@ -94,79 +84,69 @@ const App = ({ history }) => {
       });
   };
 
- 
-
-
-
   return (
-    <CurrentUserContext.Provider value={userInfo}>
-      <CardsContext.Provider value={setCards}>
-        <Header isLoggedIn={loggedIn} userEmail={userInfo?.userEmail} />
-        <Switch>
-          <Route path='/register' component={Register} />
-          <Route path='/login' component={Login} />            
-          <Route path='/' >
-            {loggedIn && userInfo ? (
-              <Main 
-                cards={cards}
-                users={users}                
-                onDeleteCardSubmit={onDeleteCardSubmit}                
-                onAddCardSubmit={onAddCardSubmit}
-              />
-            ) : (
-              <Redirect to='/login' />
-            )}
-          </Route>
-        </Switch>
-        <Footer />
-        <Route
-          path='/cards/:id'
-          render={({ match, history }) => {
-            const id = match.params.id;
-            const currentCard = cards.find(({ _id }) => id === _id);
-            console.log(currentCard);
-            return (
-              (currentCard && <ImagePopup card={currentCard} onClose={() => history.push('/cards/')} />) || (
-                <Spinner />
-              )
-            );
-          }}
-        />
-        <Route
-          path='/friends/:id'
-          render={({ match, history }) => {
-            const id = match.params.id;
-            const currentUser = users.find(({ _id }) => id === _id);
-            return (
-              (currentUser && (
-                <ImagePopup card={currentUser} onClose={() => history.push('/friends/')} />
-              )) || <Spinner />
-            );
-          }}
-        />
-        <Route
-          path='/favorite/:id'
-          render={({ match, history }) => {
-            const id = match.params.id;
-            const currentCard = cards.find(({ _id }) => id === _id);
-            return (
-              (currentCard && (
-                <ImagePopup card={currentCard} onClose={() => history.push('/favorite/')} />
-              )) || <Spinner />
-            );
-          }}
-        />
-
-        {openedPopup.isLoginStatusPopupOpen && (
-          <InfoTooltip onClose={closePopups} name='tooltip' status={authStatus} />
+    <>
+      <Header isLoggedIn={loggedIn} userEmail={userInfo?.userEmail} />
+      <Switch>
+        <Route path='/register' component={Register} />
+        <Route path='/login' component={Login} />
+        <Route path='/'>
+          {loggedIn && userInfo ? (
+            <Main
+              cards={cards}
+              users={users}
+              onDeleteCardSubmit={onDeleteCardSubmit}
+              onAddCardSubmit={onAddCardSubmit}
+            />
+          ) : (
+            <Redirect to='/login' />
           )}
+        </Route>
+      </Switch>
+      <Footer />
+      <Route
+        path='/cards/:id'
+        render={({ match, history }) => {
+          const id = match.params.id;
+          const currentCard = cards.find(({ _id }) => id === _id);
+          console.log(currentCard);
+          return (
+            (currentCard && <ImagePopup card={currentCard} onClose={() => history.push('/cards/')} />) || (
+              <Spinner />
+            )
+          );
+        }}
+      />
+      <Route
+        path='/friends/:id'
+        render={({ match, history }) => {
+          const id = match.params.id;
+          const currentUser = users.find(({ _id }) => id === _id);
+          return (
+            (currentUser && <ImagePopup card={currentUser} onClose={() => history.push('/friends/')} />) || (
+              <Spinner />
+            )
+          );
+        }}
+      />
+      <Route
+        path='/favorite/:id'
+        render={({ match, history }) => {
+          const id = match.params.id;
+          const currentCard = cards.find(({ _id }) => id === _id);
+          return (
+            (currentCard && <ImagePopup card={currentCard} onClose={() => history.push('/favorite/')} />) || (
+              <Spinner />
+            )
+          );
+        }}
+      />
 
-         
-      </CardsContext.Provider>
-    </CurrentUserContext.Provider>
+      {openedPopup.isLoginStatusPopupOpen && (
+        <InfoTooltip onClose={closePopups} name='tooltip' status={authStatus} />
+      )}
+    </>
   );
 };
 
 export default withRouter(App);
-
-

@@ -11,11 +11,13 @@ import { useSelector } from 'react-redux';
 import { useActions } from '../../reducers/useActions';
 import travlrsApi from '../../utils/travlrsApi';
 
-const Main = ({ cards, users, onAddCardSubmit, onDeleteCardSubmit }) => {
+const Main = ({ onAddCardSubmit, onDeleteCardSubmit }) => {
   const {
     userInfo: { userName, userDescription, userAvatar, userId },
     openedPopup,
   } = useSelector(({ app }) => app);
+  const { cards, users } = useSelector(({ cards }) => cards);
+  
   const {
     openEditProfilePopup,
     openAddPlacePopup,
@@ -62,7 +64,7 @@ const Main = ({ cards, users, onAddCardSubmit, onDeleteCardSubmit }) => {
     .filter((card) => card.likes.some(({ _id }) => userId === _id))
     .sort((a, b) => {
       return b.likes.length - a.likes.length;
-    });
+    });    
   const cardsElems = makeListOfElements(cards);
   const favorites = makeListOfElements(sortedFavorites);
   const friends = users.map((user) => {

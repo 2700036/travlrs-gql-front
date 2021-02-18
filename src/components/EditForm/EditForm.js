@@ -1,6 +1,5 @@
 import React from 'react';
 import withPopup from '../hoc-helpers/withPopup';
-import withUserContext from '../hoc-helpers/withUserContext';
 import { useForm } from 'react-hook-form';
 
 const EditForm = ({ onSubmit, userContext }) => {
@@ -81,4 +80,4 @@ const EditForm = ({ onSubmit, userContext }) => {
   );
 };
 
-export default withPopup(withUserContext(EditForm));
+export default withPopup(EditForm);

@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import travlrsApi from '../../utils/travlrsApi';
 import { useHistory } from 'react-router-dom';
-import { CardsContext } from '../CardsContext/CardsContext';
 import { useSelector } from 'react-redux';
+import { useCardsActions } from '../../reducers/useCardsActions';
 
 const Card = ({ cardInfo: { name, link, likes, owner, _id }, onBasketClick }) => {
+  const { updateLikeCard } = useCardsActions();
   const {
     userInfo: { userId },
   } = useSelector(({ app }) => app);
-  const history = useHistory();
-  const setCards = useContext(CardsContext);
+  const history = useHistory();  
   const isLiked = likes.some((like) => like._id === userId);
   const isUsersCard = userId === owner._id;
 
@@ -19,12 +19,7 @@ const Card = ({ cardInfo: { name, link, likes, owner, _id }, onBasketClick }) =>
 
   const handleLike = (cardId, like) => {
     travlrsApi.changeLikeCardStatus(cardId, like).then((res) => {
-      setCards((cards) => {
-        const newCards = JSON.parse(JSON.stringify(cards));
-        const card = newCards.find(({ _id }) => _id === res._id);
-        card.likes = [...res.likes];
-        return newCards;
-      });
+      updateLikeCard(res);
     });
   };
 
@@ -37,9 +32,7 @@ const Card = ({ cardInfo: { name, link, likes, owner, _id }, onBasketClick }) =>
       ></div>
       <div className='card__image-blur' style={{ backgroundImage: `url(${link})` }}></div>
 
-      {isUsersCard && (
-        <button type='button' className='card__delete-button' onClick={onBasketClick}></button>
-      )}
+      {isUsersCard && <button type='button' className='card__delete-button' onClick={onBasketClick}></button>}
       <div className='card__description'>
         <h2 className='card__title'>{name}</h2>
         <div className='card__likes'>
