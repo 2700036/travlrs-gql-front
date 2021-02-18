@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useActions } from '../../reducers/useActions.js';
-import * as auth from '../auth.js';
+import travlrsApi from '../../utils/travlrsApi';
 import '../Login/login.css';
 
 const Register = ({history}) => {
@@ -17,10 +17,10 @@ const Register = ({history}) => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    auth.register(userData.email, userData.password, userData.name).then((res) => {
+    travlrsApi.register(userData.email, userData.password, userData.name).then((res) => {
       if (res) {
         updateAuthStatus(res);
-        auth.authorize(userData.email, userData.password).then((res) => {
+        travlrsApi.authorize(userData.email, userData.password).then((res) => {
           history.push('/');
         });
       } else {

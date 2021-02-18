@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { Link, Redirect } from "react-router-dom";
-import * as auth from "../auth.js";
+import travlrsApi from '../../utils/travlrsApi';
 import { useActions } from '../../reducers/useActions';
 import { useSelector } from 'react-redux';
 import "./login.css";
@@ -22,7 +22,7 @@ const Login = ({history}) => {
     if (!userData.email || !userData.password) {
       return;
     }
-    auth
+    travlrsApi
       .authorize(userData.email, userData.password)
       .then((data) => {        
         if (data.token) {

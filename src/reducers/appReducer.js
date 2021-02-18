@@ -21,9 +21,7 @@ const initialState = {
     isLoginStatusPopupOpen: false
   },
   selectedCard: false,
-  userInfo: null,
-  cards: [],
-  users: []
+  userInfo: null,  
 };
 
 export default (state = initialState, { type, payload }) => {

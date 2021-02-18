@@ -5,7 +5,7 @@ import Footer from '../Footer/Footer';
 import ImagePopup from '../ImagePopup/ImagePopup';
 import { BrowserRouter as Router, Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { CurrentUserContext } from './../currentUserContext/CurrentUserContext';
-import api from './../../utils/api';
+import travlrsApi from './../../utils/travlrsApi';
 import './app.css';
 import { CardsContext } from '../CardsContext/CardsContext';
 
@@ -13,7 +13,7 @@ import Spinner from '../Spinner/Spinner';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
-import * as auth from '../auth';
+
 import { useActions } from '../../reducers/useActions';
 import { useSelector } from 'react-redux';
 
@@ -32,7 +32,7 @@ const App = ({ history }) => {
   const loginCheck = () => {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
-      auth
+      travlrsApi
         .checkToken(jwt)
         .then((res) => {
           updateUserInfo({
@@ -43,7 +43,7 @@ const App = ({ history }) => {
             userEmail: res.email,
           });
           logIn();
-          Promise.all([api.getCardList(), api.getUsers()])
+          Promise.all([travlrsApi.getCardList(), travlrsApi.getUsers()])
             .then((res) => {
               const [cardsData, users] = res;
               setCards(cardsData);
@@ -68,7 +68,7 @@ const App = ({ history }) => {
 
   const onDeleteCardSubmit = (e) => {
     e.preventDefault();
-    api
+    travlrsApi
       .removeCard(selectedCard._id)
       .then((res) => {
         const ind = cards.findIndex((el) => el._id === selectedCard._id);
@@ -81,7 +81,7 @@ const App = ({ history }) => {
   };
 
   const onAddCardSubmit = ({ name, link }) => {
-    api
+    travlrsApi
       .addCard({ name, link })
       .then((card) => {
         console.log(card);
@@ -169,24 +169,4 @@ const App = ({ history }) => {
 
 export default withRouter(App);
 
-// //! Обнуление данных пользователей от дураков.
-// function currentSession(){
-//   if(localStorage.user){
-//     const { name, about, avatar, _id } = JSON.parse(localStorage.user);
-//     return Promise.all([api.getCardList(), api.getUsers()])
-//     .then(res => {
-//       const [cardsData, users] = res;
-//     return [{ name, about, avatar, _id }, cardsData, users]})
-//   } else {
-//     return api.setUserInfo({name: 'Серёга Бирюков', about: 'Бэкпэкер и каучсёрфер'})
-//     .then(()=>{
-//       return api.setUserAvatar({avatar: 'https://sun9-4.userapi.com/w-Ge9P349j4ZVTXd2Zh2J0Prj8yAfhZ6l2Y8YQ/NTw6lM-rdKg.jpg'})
-//       .then(()=>{
-//         return Promise.all([api.getUserInfo(), api.getCardList(), api.getUsers()])
-//       .then(res => {
-//         localStorage.setItem('user' , JSON.stringify(res[0]))
-//         return res})
-//       })
-//     })
-//   }
-// }
+
