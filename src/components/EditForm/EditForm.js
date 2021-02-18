@@ -1,8 +1,10 @@
 import React from 'react';
 import withPopup from '../hoc-helpers/withPopup';
 import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 
-const EditForm = ({ onSubmit, userContext }) => {
+const EditForm = ({ onSubmit }) => {
+  const { userInfo } = useSelector(({ app }) => app);
   const { handleSubmit, register, errors } = useForm({
     mode: 'onChange',
   });
@@ -33,7 +35,7 @@ const EditForm = ({ onSubmit, userContext }) => {
           type='text'
           id='owner-name'
           className={`popup__input ${errors.name ? 'popup__input_type_error' : ''}`}
-          defaultValue={userContext.userName}
+          defaultValue={userInfo.userName}
         />
         {errors.name && (
           <span className='popup__error' id='owner-name-error'>
@@ -65,7 +67,7 @@ const EditForm = ({ onSubmit, userContext }) => {
           required
           minLength='2'
           maxLength='200'
-          defaultValue={userContext.userDescription}
+          defaultValue={userInfo.userDescription}
         />
         {errors.about && (
           <span className='popup__error' id='owner-description-error'>
