@@ -52,7 +52,7 @@ export default (state = initialState, { type, payload }) => {
     case UPDATE_USERINFO:
       return {
         ...state,
-        userInfo: payload
+        userInfo: {...state.userInfo, ...payload}
       };
 
     default:

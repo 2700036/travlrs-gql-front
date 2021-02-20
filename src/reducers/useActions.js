@@ -1,70 +1,65 @@
 /* eslint-disable no-unused-vars */
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from 'react-redux';
 
-export const LOG_IN = "LOG_IN";
-export const LOG_OUT = "LOG_OUT";
-export const UPDATE_AUTH_STATUS = "UPDATE_AUTH_STATUS";
-export const OPEN_EDIT_PROFILE_POPUP = "OPEN_EDIT_PROFILE_POPUP";
-export const OPEN_ADD_PLACE_POPUP = "OPEN_ADD_PLACE_POPUP";
-export const OPEN_EDIT_AVATAR_POPUP = "OPEN_EDIT_AVATAR_POPUP";
-export const OPEN_DELETE_CARD_CONFIRM_POPUP = "OPEN_DELETE_CARD_CONFIRM_POPUP";
+export const LOG_IN = 'LOG_IN';
+export const LOG_OUT = 'LOG_OUT';
+export const UPDATE_AUTH_STATUS = 'UPDATE_AUTH_STATUS';
+export const OPEN_EDIT_PROFILE_POPUP = 'OPEN_EDIT_PROFILE_POPUP';
+export const OPEN_ADD_PLACE_POPUP = 'OPEN_ADD_PLACE_POPUP';
+export const OPEN_EDIT_AVATAR_POPUP = 'OPEN_EDIT_AVATAR_POPUP';
+export const OPEN_DELETE_CARD_CONFIRM_POPUP = 'OPEN_DELETE_CARD_CONFIRM_POPUP';
 // export const OPEN_LOGIN_STATUS_POPUP = "OPEN_LOGIN_STATUS_POPUP";
-export const CLOSE_POPUPS = "CLOSE_POPUPS";
-export const UPDATE_USERINFO = "UPDATE_USERINFO";
+export const CLOSE_POPUPS = 'CLOSE_POPUPS';
+export const UPDATE_USERINFO = 'UPDATE_USERINFO';
 
 export function useActions() {
   const dispatch = useDispatch();
-  const userInfo = useSelector(({ app }) => app.userInfo);
+  
 
   const logIn = () =>
     dispatch({
-      type: LOG_IN
+      type: LOG_IN,
     });
   const logOut = () =>
     dispatch({
-      type: LOG_OUT
+      type: LOG_OUT,
     });
-  const updateAuthStatus = payload =>
+  const updateAuthStatus = (payload) =>
     dispatch({
       type: UPDATE_AUTH_STATUS,
-      payload
+      payload,
     });
-  const openEditProfilePopup = () => {
+  const openEditProfilePopup = () => 
     dispatch({
-      type: OPEN_EDIT_PROFILE_POPUP
+      type: OPEN_EDIT_PROFILE_POPUP,
     });
-  };
-  const openAddPlacePopup = () => {
+  
+  const openAddPlacePopup = () => 
     dispatch({
-      type: OPEN_ADD_PLACE_POPUP
+      type: OPEN_ADD_PLACE_POPUP,
     });
-  };
-  const openEditAvatarPopup = () => {
+  
+  const openEditAvatarPopup = () => 
     dispatch({
-      type: OPEN_EDIT_AVATAR_POPUP
+      type: OPEN_EDIT_AVATAR_POPUP,
     });
-  };
-  const openDeleteCardConfirmPopup = payload => {
+  
+  const openDeleteCardConfirmPopup = (payload) => 
     dispatch({
       type: OPEN_DELETE_CARD_CONFIRM_POPUP,
-      payload
+      payload,
     });
-  };
-//   const openLoginStatusPopup = () =>
-//     dispatch({
-//       type: OPEN_LOGIN_STATUS_POPUP
-//     });
+  
   const closePopups = () => {
     dispatch({
-      type: CLOSE_POPUPS
+      type: CLOSE_POPUPS,
     });
   };
-  const updateUserInfo = payload => {
+  const updateUserInfo = (payload) =>
     dispatch({
       type: UPDATE_USERINFO,
-      payload: { ...userInfo, ...payload }
+      payload,
     });
-  };
 
   return {
     logIn,
@@ -76,6 +71,6 @@ export function useActions() {
     openDeleteCardConfirmPopup,
     // openLoginStatusPopup,
     closePopups,
-    updateUserInfo
+    updateUserInfo,
   };
 }
