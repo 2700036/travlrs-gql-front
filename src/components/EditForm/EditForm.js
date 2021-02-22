@@ -2,16 +2,14 @@ import React from 'react';
 import withPopup from '../hoc-helpers/withPopup';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import useTravlrsApi from '../../hooks/useTravlrsApi';
 
-const EditForm = () => {
+const EditForm = ({ onSubmit }) => {
   const { userInfo } = useSelector(({ app }) => app);
-  const { handleEditSubmit } = useTravlrsApi()
   const { handleSubmit, register, errors } = useForm({
     mode: 'onChange',
   });
   const handleData = (data) => {
-    handleEditSubmit(data);
+    onSubmit(data);
   };
 
   return (
