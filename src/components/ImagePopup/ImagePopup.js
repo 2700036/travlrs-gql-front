@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
+import Spinner from '../Spinner/Spinner';
 
 
 
@@ -16,13 +17,15 @@ const ImagePopup = ({card, onClose})=> {
       }
     }
     const hadleOverlayClick = ({target})=>{
+      
       if(target.classList.contains('popup')){
         smoothClose();
       }
     }
-    popup.current.classList.add('popup_is-opened')
+   
     document.addEventListener("keydown", escFunction);
     document.addEventListener("click", hadleOverlayClick);
+    if(popup.current) popup.current.classList.add('popup_is-opened')
     
     return () => {
       document.removeEventListener("keydown", escFunction);
@@ -31,7 +34,8 @@ const ImagePopup = ({card, onClose})=> {
     };
   }, [smoothClose]);
     
-    return (
+    return card 
+    ?
       <>
         <div ref={popup} className='popup popup_type_image'>
           <div className='popup__content popup__content_content_image'>
@@ -42,13 +46,13 @@ const ImagePopup = ({card, onClose})=> {
             onClick={smoothClose}
             ></button>
             
-            <img alt={`Фото места ${card.name}`} src={card.link || card.avatar} className='popup__image' />
-    <p className='popup__caption'>{card.name}</p>
-    {card.about ? <p className='popup__caption popup__about'>{card.about}</p> : ""}
+            <img alt={`Фото места ${card?.name}`} src={card?.link || card?.avatar} className='popup__image' />
+    <p className='popup__caption'>{card?.name}</p>
+    {card?.about ? <p className='popup__caption popup__about'>{card?.about}</p> : ""}
           </div>
         </div>
       </>
-    );
+    : <Spinner />
   
 }
 

@@ -2,8 +2,10 @@ import React from 'react';
 import logo from '../../images/logo.ico';
 import { Route, Link, useHistory } from 'react-router-dom'
 import { useActions } from '../../reducers/useActions';
+import { useSelector } from 'react-redux';
 
-const Header = ({isLoggedIn, userEmail}) => {
+const Header = () => {
+  const { loggedIn, userInfo } = useSelector(({ app }) => app);
   const {logOut} = useActions();
   const history = useHistory();
   function signOut() {
@@ -26,9 +28,9 @@ const Header = ({isLoggedIn, userEmail}) => {
       Войти
       </Link>
     </Route>
-    {isLoggedIn && (
+    {loggedIn && (
       <>
-    <p className='header__email'>{userEmail}</p>
+    <p className='header__email'>{userInfo?.userEmail}</p>
     <button onClick={signOut} className='signout__link'>
         Выйти
         </button>

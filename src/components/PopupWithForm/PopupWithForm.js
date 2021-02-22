@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useRef} from 'react';
+import { useActions } from '../../reducers/useActions';
 
-const PopupWithForm = ({ title, name, onClose, children }) => {
-  
+const PopupWithForm = ({ title, name, children }) => {
+  const {       
+    closePopups: {onClose},    
+  } = useActions();
   const popup = useRef();
   const smoothClose = useCallback(() => {
     popup.current.classList.remove('popup_is-opened');

@@ -1,8 +1,9 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import useTravlrsApi from '../../hooks/useTravlrsApi';
 
-
-const EditAvatar = ({onAvatarEditSubmit}) => {
+const EditAvatar = () => {
+  const {onAvatarEditSubmit} = useTravlrsApi();
   const {handleSubmit, register, errors} = useForm({
     mode: 'onChange',
   })

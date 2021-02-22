@@ -3,16 +3,22 @@ import travlrsApi from '../../utils/travlrsApi';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useCardsActions } from '../../reducers/useCardsActions';
+import { useActions } from '../../reducers/useActions';
 
-const Card = ({ cardInfo: { name, link, likes, owner, _id }, onBasketClick }) => {
+const Card = ({ card }) => {
+  const { name, link, likes, owner, _id } = card;
   const { updateLikeCard } = useCardsActions();
+  const { openDeleteCardConfirmPopup } = useActions();
   const {
     userInfo: { userId },
   } = useSelector(({ app }) => app);
   const history = useHistory();  
   const isLiked = likes.some((like) => like._id === userId);
   const isUsersCard = userId === owner._id;
-
+  const onBasketClick=(e) => {
+    e.stopPropagation();
+    openDeleteCardConfirmPopup(card);
+  }
   //   const likesNames = newLikes.reduce((acc, cur, i)=>{
   //     return acc += i === 0 ? cur.name : `, ${cur.name}`
   //   }, '')

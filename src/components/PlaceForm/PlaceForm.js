@@ -1,11 +1,13 @@
 /* eslint-disable default-case */
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import useTravlrsApi from '../../hooks/useTravlrsApi';
 
-const PlaceForm = ({ onAddCardSubmit }) => {
+const PlaceForm = () => {
   const { handleSubmit, register, errors } = useForm({
     mode: 'onChange',
   });
+  const {onAddCardSubmit} = useTravlrsApi();
   const handleData = (data) => {
     onAddCardSubmit(data);
   };
