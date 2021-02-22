@@ -1,8 +1,5 @@
 import React from 'react';
-
-
 import { useSelector } from 'react-redux';
-
 import { useHistory } from "react-router-dom";
 import { useActions } from '../reducers/useActions';
 import { useCardsActions } from '../reducers/useCardsActions';
@@ -40,7 +37,8 @@ export default function useTravlrsApi() {
         })
         .catch((err) => {
           console.log(err);
-          updateAuthStatus({ message: err });
+          history.push('/login');
+          updateAuthStatus({ message: err.message || err });
         });
     } else {
       history.push('/login');
