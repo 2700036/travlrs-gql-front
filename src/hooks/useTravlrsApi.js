@@ -6,7 +6,7 @@ import { useCardsActions } from '../reducers/useCardsActions';
 import travlrsApi from '../utils/travlrsApi';
 
 export default function useTravlrsApi() {
-  const { selectedCard } = useSelector(({ app }) => app);
+  const { selectedCard, userInfo } = useSelector(({ app }) => app);
   const { updateUserInfo, logIn, updateAuthStatus, closePopups } = useActions();
   const { cardsFill, addCard, deleteCard, usersFill } = useCardsActions();
   const history = useHistory();
@@ -17,6 +17,7 @@ export default function useTravlrsApi() {
       travlrsApi
         .checkToken(jwt)
         .then((res) => {
+          if(userInfo?.userId === res._id)return;
           updateUserInfo({
             userName: res.name,
             userDescription: res.about,
@@ -24,15 +25,15 @@ export default function useTravlrsApi() {
             userId: res._id,
             userEmail: res.email,
           });
-          logIn();
           Promise.all([travlrsApi.getCardList(), travlrsApi.getUsers()])
-            .then((res) => {
-              const [cardsData, users] = res;
-              cardsFill(cardsData);
-              usersFill(users);
-            })
-            .catch((err) => {
-              console.log(err);
+          .then((res) => {
+            const [cardsData, users] = res;
+            cardsFill(cardsData);
+            usersFill(users);
+            logIn();
+          })
+          .catch((err) => {
+            console.log(err);
             });
         })
         .catch((err) => {

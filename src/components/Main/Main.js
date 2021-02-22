@@ -85,7 +85,8 @@ const Main = () => {
           />
         </section>
       </main>
-      {openedPopup.isEditProfilePopupOpen && <EditForm title='Редактировать профиль' name='edit' />}
+      {openedPopup.isEditProfilePopupOpen && 
+      <EditForm title='Редактировать профиль' name='edit' />}
       {openedPopup.isAddPlacePopupOpen && (
         <PopupWithForm title='Предложить место' name='new-card'>
           <PlaceForm />

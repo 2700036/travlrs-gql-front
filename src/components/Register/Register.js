@@ -6,7 +6,7 @@ import '../Login/login.css';
 
 const Register = ({history}) => {
   
-  const { updateAuthStatus } = useActions();
+  const { logIn, updateAuthStatus } = useActions();
   const [userData, setUserData] = useState({
     email: '',
     password: '',
@@ -21,6 +21,7 @@ const Register = ({history}) => {
       if (res) {
         updateAuthStatus(res);
         travlrsApi.authorize(userData.email, userData.password).then((res) => {
+          logIn();
           history.push('/');
         });
       } else {

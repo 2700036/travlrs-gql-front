@@ -113,8 +113,7 @@ class TravlrsApi {
       .catch((err) => console.log(`Изменения статуса лайка: ${err}`));
   }
 
-  register (email, password, name) {
-    console.log({email, password, name})
+  register (email, password, name) {    
     return fetch(`${this._address}/signup`, {
       method: "POST",
       headers: {
@@ -131,8 +130,7 @@ class TravlrsApi {
       })
       .catch((err) => console.log(err));
   };
-  authorize (email, password){
-    console.log(email, password)
+  authorize (email, password){    
     return fetch(`${this._address}/signin`, {
       method: "POST",
       headers: {

@@ -14,9 +14,9 @@ import './app.css';
 const App = () => {
   const { loggedIn, userInfo, openedPopup } = useSelector(({ app }) => app);
   const { loginCheck } = useTravlrsApi();
-
+ 
   React.useEffect(() => {
-    loginCheck();
+    loginCheck();    
   }, [loggedIn]);
 
   return (

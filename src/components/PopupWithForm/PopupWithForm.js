@@ -3,7 +3,7 @@ import { useActions } from '../../reducers/useActions';
 
 const PopupWithForm = ({ title, name, children }) => {
   const {       
-    closePopups: {onClose},    
+    closePopups: onClose,    
   } = useActions();
   const popup = useRef();
   const smoothClose = useCallback(() => {
