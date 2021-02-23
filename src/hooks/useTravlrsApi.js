@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import { useActions } from '../reducers/useActions';
 import { useCardsActions } from '../reducers/useCardsActions';
 import travlrsApi from '../utils/travlrsApi';
@@ -8,7 +8,7 @@ import travlrsApi from '../utils/travlrsApi';
 export default function useTravlrsApi() {
   const { selectedCard, userInfo } = useSelector(({ app }) => app);
   const { updateUserInfo, logIn, updateAuthStatus, closePopups } = useActions();
-  const { cardsFill, addCard, deleteCard, usersFill } = useCardsActions();
+  const { fetchData, addCard, deleteCard } = useCardsActions();
   const history = useHistory();
 
   const loginCheck = () => {
@@ -17,7 +17,7 @@ export default function useTravlrsApi() {
       travlrsApi
         .checkToken(jwt)
         .then((res) => {
-          if(userInfo?.userId === res._id)return;
+          if (userInfo?.userId === res._id) return;
           updateUserInfo({
             userName: res.name,
             userDescription: res.about,
@@ -25,16 +25,8 @@ export default function useTravlrsApi() {
             userId: res._id,
             userEmail: res.email,
           });
-          Promise.all([travlrsApi.getCardList(), travlrsApi.getUsers()])
-          .then((res) => {
-            const [cardsData, users] = res;
-            cardsFill(cardsData);
-            usersFill(users);
-            logIn();
-          })
-          .catch((err) => {
-            console.log(err);
-            });
+          logIn();
+          fetchData(travlrsApi);
         })
         .catch((err) => {
           console.log(err);
@@ -50,7 +42,7 @@ export default function useTravlrsApi() {
     e.preventDefault();
     travlrsApi
       .removeCard(selectedCard._id)
-      .then((res) => { 
+      .then((res) => {
         deleteCard(selectedCard._id);
         closePopups();
       })
@@ -85,8 +77,11 @@ export default function useTravlrsApi() {
     });
   };
 
-
   return {
-    loginCheck, onDeleteCardSubmit, onAddCardSubmit, handleEditSubmit, onAvatarEditSubmit
-  }
+    loginCheck,
+    onDeleteCardSubmit,
+    onAddCardSubmit,
+    handleEditSubmit,
+    onAvatarEditSubmit,
+  };
 }
