@@ -1,12 +1,15 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { AppState, RootState } from '../reducers/types';
 import { useActions } from '../reducers/useActions';
 import { useCardsActions } from '../reducers/useCardsActions';
 import travlrsApi from '../utils/travlrsApi';
 
+
+
 export default function useTravlrsApi() {
-  const { selectedCard, userInfo } = useSelector(({ app }) => app);
+  const { selectedCard, userInfo } = useSelector(({ app }: RootState): AppState => app);
   const { updateUserInfo, logIn, updateAuthStatus, closePopups } = useActions();
   const { fetchData, addCard, deleteCard } = useCardsActions();
   const history = useHistory();
@@ -38,12 +41,13 @@ export default function useTravlrsApi() {
     }
   };
 
-  const onDeleteCardSubmit = (e) => {
+  const onDeleteCardSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     travlrsApi
-      .removeCard(selectedCard._id)
+      .removeCard(selectedCard?._id)
       .then((res) => {
-        deleteCard(selectedCard._id);
+        
+        deleteCard(selectedCard!._id);
         closePopups();
       })
       .catch((err) => {
@@ -51,7 +55,7 @@ export default function useTravlrsApi() {
       });
   };
 
-  const onAddCardSubmit = ({ name, link }) => {
+  const onAddCardSubmit = ({ name, link }: { name: string; link: string }) => {
     travlrsApi
       .addCard({ name, link })
       .then((card) => {
@@ -63,14 +67,14 @@ export default function useTravlrsApi() {
         console.log(err);
       });
   };
-  const handleEditSubmit = (userInfo) => {
+  const handleEditSubmit = (userInfo: { name: string; about: string }) => {
     travlrsApi.setUserInfo(userInfo).then(({ name, about }) => {
       updateUserInfo({ userName: name, userDescription: about });
       closePopups();
     });
   };
 
-  const onAvatarEditSubmit = (url) => {
+  const onAvatarEditSubmit = (url: { avatar: string }) => {
     travlrsApi.setUserAvatar(url).then(({ avatar }) => {
       updateUserInfo({ userAvatar: avatar });
       closePopups();

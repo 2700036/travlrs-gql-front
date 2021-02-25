@@ -1,6 +1,11 @@
-import { compose, createStore } from "redux";
+import { compose, createStore, applyMiddleware } from "redux";
 import {reducer} from "./reducers";
 
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

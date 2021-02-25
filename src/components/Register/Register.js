@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useActions } from '../../reducers/useActions.js';
+import { useActions } from '../../reducers/useActions';
 import travlrsApi from '../../utils/travlrsApi';
 import '../Login/login.css';
 

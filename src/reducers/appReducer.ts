@@ -1,3 +1,4 @@
+import { AppActionTypes, AppState } from "./types";
 import {
   LOG_IN,
   LOG_OUT,
@@ -8,9 +9,9 @@ import {
   OPEN_DELETE_CARD_CONFIRM_POPUP,
   CLOSE_POPUPS,
   UPDATE_USERINFO
-} from "./useActions";
+} from "./types";
 
-const initialState = {
+const initialState: AppState = {
   loggedIn: false,
   authStatus: null,
   openedPopup: {
@@ -20,19 +21,19 @@ const initialState = {
     isDeleteCardPopupOpened: false,
     isLoginStatusPopupOpen: false
   },
-  selectedCard: false,
+  selectedCard: null,
   userInfo: null,  
 };
 
-export default (state = initialState, { type, payload }) => {
-  switch (type) {
+export default (state = initialState, action: AppActionTypes): AppState => {
+  switch (action.type) {
     case LOG_IN:
       return { ...state, loggedIn: true };
     case LOG_OUT:
       return { ...state, loggedIn: false, userInfo: null };
     case UPDATE_AUTH_STATUS:
       return { ...state, 
-        authStatus: payload,
+        authStatus: action.payload,
         openedPopup: { isLoginStatusPopupOpen: true }        
     };
     case OPEN_EDIT_PROFILE_POPUP:
@@ -44,18 +45,19 @@ export default (state = initialState, { type, payload }) => {
     case OPEN_DELETE_CARD_CONFIRM_POPUP:
       return {
         ...state,
-        selectedCard: payload,
+        selectedCard: action.payload,
         openedPopup: { isDeleteCardPopupOpened: true }
       };
     case CLOSE_POPUPS:
-      return { ...state, selectedCard: false, openedPopup: {} };
+      return { ...state, selectedCard: null, openedPopup: {} };
     case UPDATE_USERINFO:
       return {
         ...state,
-        userInfo: {...state.userInfo, ...payload}
+        userInfo: {...state.userInfo, ...action.payload}
       };
 
     default:
-      return state;
+      const forgotSomeAction: never = action;
   }
+  return state;
 };
