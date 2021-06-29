@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Link, Redirect } from "react-router-dom";
 import travlrsApi from '../../utils/travlrsApi';
 import { useActions } from '../../reducers/useActions';
 import { useSelector } from 'react-redux';
 import "./login.css";
+import { useMutationLogin } from "../../hooks/useMutationLogin";
 
 const Login = ({history}) => {
   const { loggedIn, userInfo } = useSelector(({ app }) => app);
@@ -12,6 +13,7 @@ const Login = ({history}) => {
     email: '',
     password: ''    
   });  
+  const {handleLogin, user, loading, error} = useMutationLogin()
   
   const handleChange = ({ target: { name, value } }) => {
     setUserData((userData) => ({ ...userData, [name]: value }));
@@ -22,19 +24,31 @@ const Login = ({history}) => {
     if (!userData.email || !userData.password) {
       return;
     }
-    travlrsApi
-      .authorize(userData.email, userData.password)
-      .then((data) => {        
-        if (data.token) {
-          setUserData({ email: "", password: "" });
-          logIn();
-          history.push("/");          
-        } else {
-          updateAuthStatus({error: data.message});            
-        }
-      })
-      .catch((err) => console.log(err));
+
+    handleLogin(userData).then((data) => {      
+        console.log('⚛️ : data', data)
+        
+        logIn();
+    }).catch(error => {
+      // updateAuthStatus({error: error});
+        console.log(error)
+    })
+
+    // travlrsApi
+    //   .authorize(userData.email, userData.password)
+    //   .then((data) => {        
+    //     if (data.token) {
+    //       setUserData({ email: "", password: "" });
+    //       logIn();
+    //       history.push("/");          
+    //     } else {
+    //       updateAuthStatus({error: data.message});            
+    //     }
+    //   })
+    //   .catch((err) => console.log(err));
   }
+    
+    
   
     return loggedIn && userInfo ? <Redirect to='/' /> :
     (
@@ -67,7 +81,7 @@ const Login = ({history}) => {
               onSubmit={handleSubmit}
               className="login__button"
             >
-              Войти
+              {loading ? 'Загрузка...' : 'Войти'}
             </button>
           
         </form>

@@ -10,23 +10,37 @@ import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import { useSelector } from 'react-redux';
 import useTravlrsApi from '../../hooks/useTravlrsApi';
 import './app.css';
+import { AnimatedSwitch } from 'react-router-transition';
+import { useQueryMe } from '../../hooks/useQueryMe';
+
+
 
 const App = () => {
   const { loggedIn, userInfo, openedPopup } = useSelector(({ app }) => app);
   const { loginCheck } = useTravlrsApi();
- 
+  const {user: queryUser} = useQueryMe()
+  
   React.useEffect(() => {
-    loginCheck();    
+    
+  
+    console.log('⚛️ : queryUser', queryUser)
+    
+    
   }, [loggedIn]);
 
   return (
     <>
       <Header />
-      <Switch>
+      <AnimatedSwitch
+      atEnter={{ opacity: 0 }}
+      atLeave={{ opacity: 0 }}
+      atActive={{ opacity: 1 }}
+      className="switch-wrapper"
+      >
         <Route path='/register' component={Register} />
         <Route path='/login' component={Login} />
         <Route path='/'>{loggedIn && userInfo ? <Main /> : <Spinner />}</Route>
-      </Switch>
+      </AnimatedSwitch>
       <Footer />
       {openedPopup.isLoginStatusPopupOpen && <InfoTooltip name='tooltip' />}
     </>

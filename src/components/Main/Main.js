@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { useActions } from '../../reducers/useActions';
 import List from '../List/List';
 import useTravlrsApi from '../../hooks/useTravlrsApi';
+import { AnimatedSwitch } from 'react-router-transition';
 
 const Main = () => {
   const {
@@ -64,6 +65,12 @@ const Main = () => {
           </NavLink>
         </div>
         <section className='places page__section'>
+        <AnimatedSwitch
+      atEnter={{ opacity: 0 }}
+      atLeave={{ opacity: 0 }}
+      atActive={{ opacity: 1 }}
+      className="switch-wrapper"
+      >
           <Route exact path='/' render={WelcomeScreen} />
           <Route
             path='/cards/:id?'
@@ -83,6 +90,7 @@ const Main = () => {
               return <List itemComponent={Card} items={sortedFavorites} />;
             }}
           />
+          </AnimatedSwitch>
         </section>
       </main>
       {openedPopup.isEditProfilePopupOpen && 
