@@ -50,5 +50,8 @@
     "@types/react-redux": "^7.1.16",
     "@types/react-router-dom": "^5.1.7",
     "apollo": "^2.33.4"
+  },
+  "engines": {
+    "node": "15.0.1"
   }
 }
